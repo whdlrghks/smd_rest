@@ -102,6 +102,8 @@ def shilla_2(url):
             sl_product_normal_price = sl_price_tmp3[0]
         if '재입고알림 신청' in html:   #일시품점일 경우 neg, 재고가 남아 있을 경우 pos
             sl_product_ps = 'neg'
+        elif '품절' in html:
+            sl_prouduct_ps = 'neg'
         else:
             sl_product_ps = 'pos'
             # try:
