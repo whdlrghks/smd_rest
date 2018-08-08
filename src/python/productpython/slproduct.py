@@ -39,7 +39,7 @@ def shilla_2(url):
             sl_price_tmp = remove_html_tags(str(sl_price[0]))
             sl_price_tmp2 = sl_price_tmp.split('(')
             sl_product_normal_price = sl_price_tmp2[0].replace(" ","").replace("$","").replace("\n","")
-        elif 'avd_wrapper' in html:
+        elif 'avd_wrap' in html:
             sl_price = soup.select('#tab_sec1 > div.prod_buyinfo > table > tbody > tr:nth-of-type(3) > td')
             sl_price_tmp = remove_html_tags(str(sl_price[0]))
             sl_price_tmp2 = sl_price_tmp.split('(')

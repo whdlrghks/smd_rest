@@ -6,7 +6,7 @@ import os
 #http://www.shilladfs.com/estore/kr/ko/?uiel=Desktop success
 #https://www.shilladfs.com/estore/kr/ko/login?error=true&popup=true&nextUrl=/estore/kr/ko fail
 dir_path = os.path.dirname(os.path.realpath(os.getcwd()))
-driver = webdriver.Chrome('/Users/ikhwan/capstone/chromedriver')
+driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver')
 
 def checkShinlaID():
     driver.get('https://www.shilladfs.com/estore/kr/ko/login')

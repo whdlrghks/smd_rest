@@ -9,7 +9,7 @@ def remove_html_tags(data):
     return p.sub('\n', data)
 
 dir_path = os.path.dirname(os.path.realpath(os.getcwd()))
-driver = webdriver.Chrome('/Users/ikhwan/capstone/chromedriver')
+driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver')
 driver.get('https://www.ssgdfm.com/shop/main')
 driver.find_element_by_xpath('//*[@id="ssgdf-header"]/div[2]/div/div[2]/ul/li[1]/a').click()
 driver.implicitly_wait(3)

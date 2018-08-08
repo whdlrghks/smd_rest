@@ -12,7 +12,7 @@ def remove_html_tags(data):
     p = re.compile(r'<.*?>')
     return p.sub('\n', data)
 dir_path = os.path.dirname(os.path.realpath(os.getcwd()))
-driver = webdriver.Chrome('/Users/ikhwan/capstone/chromedriver')
+driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver')
 
 driver.get("https://kor.lps.lottedfs.com/kr/mypage/svmnHstrList")
 driver.find_element_by_name('loginLpId').send_keys(sys.argv[1])

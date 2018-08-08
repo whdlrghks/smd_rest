@@ -22,7 +22,7 @@ import sys
 
 
 def ssg_sele(url):
-    driver = webdriver.Chrome('/Users/ikhwan/capstone/chromedriver')
+    driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver')
     #driver = new HtmlUnitDriver();
     #new WebDriverWait(driver, 10).until(ExpectedConditions.presenceOfElementLocated(By.id(“element”)));
     driver.get(url)
