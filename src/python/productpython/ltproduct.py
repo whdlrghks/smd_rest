@@ -10,15 +10,20 @@ from selenium.common.exceptions import UnexpectedAlertPresentException
 from selenium.webdriver.common.alert import Alert
 import sys
 import requests
-
+def remove_html_tags(data):
+    p = re.compile(r'<.*?>')
+    return p.sub('\n', data)
 
 
 
 def lotte_2(url):   # url = 상품 페이지 url
-    driver = webdriver.Chrome('/Users/ikhwan/capstone/chromedriver')
+    driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver')
     lt_product = url
     # try:
     driver.get(lt_product)
+    timeout = 7
+    element_present = EC.presence_of_element_located((By.ID, 'prdPriceBenefit'))
+    WebDriverWait(driver, timeout).until(element_present)
     html = driver.page_source
     soup = BeautifulSoup(html, 'html.parser')
     try:
