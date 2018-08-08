@@ -2,6 +2,7 @@ from selenium import webdriver
 from bs4 import BeautifulSoup
 import re
 import os
+import sys
 
 def remove_html_tags(data):
     p = re.compile(r'<.*?>')
@@ -16,8 +17,8 @@ window_before = driver.window_handles[0]
 window_after = driver.window_handles[1]
 
 driver.switch_to_window(window_after)
-driver.find_element_by_name('userId').send_keys('john6939')
-driver.find_element_by_name('password').send_keys('whdlrghks1!')
+driver.find_element_by_name('userId').send_keys(sys.argv[1])
+driver.find_element_by_name('password').send_keys(sys.argv[2])
 driver.find_element_by_xpath('//*[@id="loginForm"]/div/div[2]/input').click()
 driver.implicitly_wait(1)
 try:

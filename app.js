@@ -19,7 +19,7 @@ var port = 5050;
 // var Book = require('./models/book')
 
 var python_router = require('./routes/python_router')(app);
-
+var product_router = require('./routes/product_router')(app);
 // // [CONFIGURE ROUTER] - 스키마 전달
 // var router = require('./routes')(app,Book);
 

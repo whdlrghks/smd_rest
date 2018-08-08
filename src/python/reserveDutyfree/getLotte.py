@@ -6,6 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
 import os
+import sys
 
 def remove_html_tags(data):
     p = re.compile(r'<.*?>')
@@ -14,8 +15,8 @@ dir_path = os.path.dirname(os.path.realpath(os.getcwd()))
 driver = webdriver.Chrome('/Users/ikhwan/capstone/chromedriver')
 
 driver.get("https://kor.lps.lottedfs.com/kr/mypage/svmnHstrList")
-driver.find_element_by_name('loginLpId').send_keys('john6939')
-driver.find_element_by_name('password').send_keys('whdlrghks1!')
+driver.find_element_by_name('loginLpId').send_keys(sys.argv[1])
+driver.find_element_by_name('password').send_keys(sys.argv[2])
 driver.find_element_by_xpath('/html/body/div/div/section/div/div/div[1]/form/div[2]/div/div[1]/p[2]/a').click()
 timeout = 5
 try:
