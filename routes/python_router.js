@@ -48,7 +48,8 @@ module.exports = function(app) {
   })
 
   app.post('/api/getltreserved', function(req, res){
-    var options = req.body.options_lt;
+    var options = req.body;
+
     PythonShell.run('./src/python/reserveDutyfree/getLotte.py', options, function (err, results) {
       console.log("GET USER LOTTE MEMBERSHIP RESERVED POINT : " +results);
       if (err) throw err;
@@ -57,7 +58,8 @@ module.exports = function(app) {
   })
 
   app.post('/api/getslreserved', function(req, res){
-    var options = req.body.options;
+    console.log(req.body);
+    var options = req.body;
     PythonShell.run('./src/python/reserveDutyfree/getShinla.py', options, function (err, results) {
       console.log("GET USER SHINLA MEMBERSHIP RESERVED POINT : " +results);
       if (err) throw err;
@@ -66,7 +68,8 @@ module.exports = function(app) {
   })
 
   app.post('/api/getssgreserved', function(req, res){
-    var options = req.body.options;
+    console.log(req.body);
+    var options = req.body;
     PythonShell.run('./src/python/reserveDutyfree/getSSG.py', options, function (err, results) {
       console.log("GET USER SSG MEMBERSHIP RESERVED POINT : " +results);
       if (err) throw err;
