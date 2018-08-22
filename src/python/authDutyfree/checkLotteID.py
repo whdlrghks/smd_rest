@@ -40,7 +40,7 @@ def checkLotteID():
 #http://lpsso.lottedfs.com/app/login/LSLA100300.do
 #https://kor.lps.lottedfs.com/kr/member/!pologin
     dir_path = os.path.dirname(os.path.realpath(os.getcwd()))
-    driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver')
+    driver = webdriver.Chrome('/home/cloudpool/Desktop/apiserver/smd_rest/src/python/chromedriver')
 
     driver.get("https://kor.lps.lottedfs.com/kr/mypage/svmnHstrList")
     driver.find_element_by_name('loginLpId').send_keys(sys.argv[1])
