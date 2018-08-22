@@ -1,6 +1,7 @@
 var async = require('async'), mime = require('mime');
 var product_list = require('../models/product_list');
 var PythonShell = require('python-shell');
+
 module.exports = function(app) {
 
   //처음 카테고리 들어갈때에 최종적으로 몇개인지 알아낸다. 그래서 그만큼의 페이지를 만든다.
@@ -10,47 +11,52 @@ module.exports = function(app) {
     var prd_3rd = req.body.depth3;
     var startPage = req.body.startPage;
     var limit = req.body.limitPage;
-    console.log(prd_1st);
-    console.log(prd_2nd);
-    console.log(prd_3rd);
-    startPage = startPage * limit;
-    //pagetoken 필요 - 한페이지 당 갯수 지정
-    if (startPage == 0) {
-      product_list.find({
+    if(req.body.depth3!=''){
+      var findoption = {
           prd_1st: prd_1st,
           prd_2nd: prd_2nd,
           prd_3rd: prd_3rd
-        })
+        };
+    }
+    else if(req.body.depth2!=''){
+      var findoption = {
+          prd_1st: prd_1st,
+          prd_2nd: prd_2nd
+        }
+    }
+    else if(req.body.depth1!=''){
+      var findoption  = {
+          prd_1st: prd_1st
+        }
+    }
+    else{
+      console.log("NO RESULT ABOUT CATEGORIES");
+      res.json("no result")
+    }
+    startPage = startPage * limit;
+    //pagetoken 필요 - 한페이지 당 갯수 지정
+    if (startPage == 0) {
+      product_list.find(
+        findoption
+      )
         .limit(limit)
         .exec(function(err, product) {
-          product_list.count({
-            prd_1st: prd_1st,
-            prd_2nd: prd_2nd,
-            prd_3rd: prd_3rd
-          }, function(err, count) {
+          product_list.count(findoption, function(err, count) {
             var result = [];
-            result[0] = count / limit;
+            result[0] = Math.ceil(count / limit);
             result[1] = product;
             result[2] = startPage;
             res.json(result);
           })
         })
     } else {
-      product_list.find({
-          prd_1st: prd_1st,
-          prd_2nd: prd_2nd,
-          prd_3rd: prd_3rd
-        })
+      product_list.find(findoption)
         .limit(limit)
         .skip(startPage)
         .exec(function(err, product) {
-          product_list.count({
-            prd_1st: prd_1st,
-            prd_2nd: prd_2nd,
-            prd_3rd: prd_3rd
-          }, function(err, count) {
+          product_list.count(findoption, function(err, count) {
             var result = [];
-            result[0] = count / limit;
+            result[0] = Math.ceil(count / limit);
             result[1] = product;
             result[2] = startPage;
             res.json(result);
@@ -177,8 +183,8 @@ module.exports = function(app) {
   app.post('/api/product/SL', function(req, res) {
     console.log("API PRODUCT BY " + req.body.prd_url);
     var prd_url = req.body.prd_url;
-    var result;
-
+    var result ;
+    var percent_prd=0;
     if (prd_url != undefined) {
       console.log("SHINLA IN");
       var options_sl = {
@@ -188,19 +194,73 @@ module.exports = function(app) {
         scriptPath: '',
         args: [prd_url]
       }
-      PythonShell.run('./src/python/productpython/slproduct.py', options_sl, function(err, results) {
-        //result = 가격 / 재고
-        console.log(results);
-        if (err) throw err;
-        if (results == "No price/No storage") {
-          result = results;
-          res.json(result);
-        } else {
-          console.log("SL result " + results);
-          result = results;
-          res.json(result);
-        }
-      });
+      async.parallel([
+          function(callback){
+            PythonShell.run('./src/python/productpython/slproduct.py', options_sl, function(err, results) {
+              //result = 가격 / 재고
+              console.log(results);
+              if (err) throw err;
+              if (results == "No price/No storage") {
+                result= results;
+                callback(null,"finish");
+              } else {
+                console.log("SL result " + results);
+                result= results;
+                callback(null,"finish");
+              }
+            });
+          },
+          function(callback){
+            if(req.body.SL_reserved!=''){
+              PythonShell.run('./src/python/productpython/getslpercent.py', options_sl, function(err, percent) {
+                //result = 가격 / 재고
+                console.log("SL percent",percent);
+                if(percent!=null||percent!=undefined){
+                  percent_prd=percent[0];
+                }
+                callback(null,"finish");
+              });
+            }
+          }
+        ],
+        function(err, result_callback) {
+          if (err) {
+            res.json("Error From get the product");
+          } else {
+            var price = result[0].split("/")[0];
+            var options_sl_cal = {
+              mode: 'text',
+              pythonPath: '',
+              pythonOptions: ['-u'],
+              scriptPath: '',
+              args: [percent_prd,price,req.body.SL_reserved]
+            }
+            percent_prd=percent_prd*1;
+            price= price*1;
+            var reserve = req.body.SL_reserved*1;
+            if(percent_prd == 0)
+                var discount_price = price;
+            else{
+                if (reserve >= (price * (percent_prd/100))){
+                  var discount_price = price * (1 - float(percent_prd/100))
+                }
+
+                else{
+                  var discount_price = price - reserve
+                }
+            }
+            result = result+"/"+discount_price;
+            res.json(result);
+            // PythonShell.run('./src/python/productpython/cal_reserve.py', options_sl_cal, function(err, discount_price) {
+            //   //result = 가격 / 재고
+            //   console.log("SL_discount_price",discount_price);
+            //   result = result+"/"+discount_price;
+            //   res.json(result);
+            // });
+
+          }
+        })
+
     } else {
       result = ['No price/No storage'];
       res.json(result);
@@ -209,9 +269,12 @@ module.exports = function(app) {
   })
   app.post('/api/product/LT', function(req, res) {
     console.log("API PRODUCT BY " + req.body.prd_url);
+
     var prd_url = req.body.prd_url;
-    var result;
+    var result ;
+    var percent_prd=0;
     if (prd_url != undefined) {
+      console.log("LOTTE IN");
       var options_lt = {
         mode: 'text',
         pythonPath: '',
@@ -219,31 +282,114 @@ module.exports = function(app) {
         scriptPath: '',
         args: [prd_url]
       }
-      PythonShell.run('./src/python/productpython/ltproduct.py', options_lt, function(err, results) {
-        //result = 가격 / 재고
+      async.parallel([
+          function(callback){
+            PythonShell.run('./src/python/productpython/ltproduct.py', options_lt, function(err, results) {
+              //result = 가격 / 재고
+              console.log(results);
+              if (err) throw err;
+              if (results == "No price/No storage") {
+                result= results;
+                callback(null,"finish");
+              } else {
+                console.log("SL result " + results);
+                result= results;
+                callback(null,"finish");
+              }
+            });
+          },
+          function(callback){
+            if(req.body.LT_reserved!=''){
+              PythonShell.run('./src/python/productpython/getltpercent.py', options_lt, function(err, percent) {
+                //result = 가격 / 재고
+                console.log("LT percent",percent);
+                if(percent!=null||percent!=undefined){
+                  percent_prd=percent[0];
+                }
+                callback(null,"finish");
+              });
+            }
+          }
+        ],
+        function(err, result_callback) {
+          if (err) {
+            res.json("Error From get the product");
+          } else {
+            var price = result[0].split("/")[0];
+            var options_lt_cal = {
+              mode: 'text',
+              pythonPath: '',
+              pythonOptions: ['-u'],
+              scriptPath: '',
+              args: [percent_prd,price,req.body.LT_reserved]
+            }
+            percent_prd=percent_prd*1;
+            price= price*1;
+            var reserve = req.body.LT_reserved*1;
+            if(percent_prd == 0)
+                var discount_price = price;
+            else{
+                if (reserve >= (price * (percent_prd/100))){
+                  var discount_price = price * (1 - float(percent_prd/100))
+                }
 
-        if (err) throw err;
-        if (results == "No price/No storage") {
-          result = results;
-          res.json(result);
-        } else {
-          console.log("LT result " + results);
-          result = results;
-          res.json(result);
-        }
-      });
+                else{
+                  var discount_price = price - reserve
+                }
+            }
+            result = result+"/"+discount_price;
+            res.json(result);
+            // PythonShell.run('./src/python/productpython/cal_reserve.py', options_lt_cal, function(err, discount_price) {
+            //   //result = 가격 / 재고
+            //   console.log("LT_discount_price",discount_price);
+            //   result = result+"/"+discount_price;
+            //   res.json(result);
+            // });
+
+          }
+        })
+
     } else {
       result = ['No price/No storage'];
       res.json(result);
     }
+    //
+    // var prd_url = req.body.prd_url;
+    // var result;
+    // if (prd_url != undefined) {
+    //   var options_lt = {
+    //     mode: 'text',
+    //     pythonPath: '',
+    //     pythonOptions: ['-u'],
+    //     scriptPath: '',
+    //     args: [prd_url]
+    //   }
+    //   PythonShell.run('./src/python/productpython/ltproduct.py', options_lt, function(err, results) {
+    //     //result = 가격 / 재고
+    //
+    //     if (err) throw err;
+    //     if (results == "No price/No storage") {
+    //       result = results;
+    //       res.json(result);
+    //     } else {
+    //       console.log("LT result " + results);
+    //       result = results;
+    //       res.json(result);
+    //     }
+    //   });
+    // } else {
+    //   result = ['No price/No storage'];
+    //   res.json(result);
+    // }
 
   })
   app.post('/api/product/SSG', function(req, res) {
     console.log("API PRODUCT BY " + req.body.prd_url);
     var prd_url = req.body.prd_url;
-    var result;
-
-    if (prd_url != '42') {
+    var result ;
+    var percent_prd=0;
+    if (prd_url != undefined) {
+      console.log("SSG IN");
       var options_ssg = {
         mode: 'text',
         pythonPath: '',
@@ -251,23 +397,123 @@ module.exports = function(app) {
         scriptPath: '',
         args: [prd_url]
       }
-      PythonShell.run('./src/python/productpython/ssgproduct.py', options_ssg, function(err, results) {
+      async.parallel([
+          function(callback){
+            PythonShell.run('./src/python/productpython/ssgproduct.py', options_ssg, function(err, results) {
+              //result = 가격 / 재고
+              console.log(results);
+              if (err) throw err;
+              if (results == "No price/No storage") {
+                result= results;
+                callback(null,"finish");
+              } else {
+                console.log("SSG result " + results);
+                result= results;
+                callback(null,"finish");
+              }
+            });
+          },
+          function(callback){
+            if(req.body.SSG_reserved!=''){
+              PythonShell.run('./src/python/productpython/getssgpercent.py', options_ssg, function(err, percent) {
+                //result = 가격 / 재고
+                console.log("SSG percent",percent);
+                if(percent!=null||percent!=undefined){
+                  percent_prd=percent[0];
+                }
+                callback(null,"finish");
+              });
+            }
+          }
+        ],
+        function(err, result_callback) {
+          if (err) {
+            res.json("Error From get the product");
+          } else {
+            var price = result[0].split("/")[0];
+            var options_ssg_cal = {
+              mode: 'text',
+              pythonPath: '',
+              pythonOptions: ['-u'],
+              scriptPath: '',
+              args: [percent_prd,price,req.body.SSG_reserved]
+            }
+            percent_prd=percent_prd*1;
+            price= price*1;
+            var reserve = req.body.SSG_reserved*1;
+            if(percent_prd == 0)
+                var discount_price = price;
+            else{
+                if (reserve >= (price * (percent_prd/100))){
+                  var discount_price = price * (1 - float(percent_prd/100))
+                }
 
-        //result = 가격 / 재고
-        if (err) throw err;
-        if (results == "No price/No storage") {
-          result = results;
-          res.json(result);
-        } else {
-          result = results;
-          console.log("SSG result " + results);
-          res.json(result);
-        }
-      });
+                else{
+                  var discount_price = price - reserve
+                }
+            }
+            result = result+"/"+discount_price;
+            res.json(result);
+            // PythonShell.run('./src/python/productpython/cal_reserve.py', options_ssg_cal, function(err, discount_price) {
+            //   //result = 가격 / 재고
+            //   console.log("SSG_discount_price",discount_price);
+            //   result = result+"/"+discount_price;
+            //   res.json(result);
+            // });
+
+          }
+        })
+
     } else {
       result = ['No price/No storage'];
       res.json(result);
     }
 
+    // var result;
+    //
+    // if (prd_url != '42') {
+    //   var options_ssg = {
+    //     mode: 'text',
+    //     pythonPath: '',
+    //     pythonOptions: ['-u'],
+    //     scriptPath: '',
+    //     args: [prd_url]
+    //   }
+    //   PythonShell.run('./src/python/productpython/ssgproduct.py', options_ssg, function(err, results) {
+    //
+    //     //result = 가격 / 재고
+    //     if (err) throw err;
+    //     if (results == "No price/No storage") {
+    //       result = results;
+    //       res.json(result);
+    //     } else {
+    //       result = results;
+    //       console.log("SSG result " + results);
+    //       res.json(result);
+    //     }
+    //   });
+    // } else {
+    //   result = ['No price/No storage'];
+    //   res.json(result);
+    // }
+
+  })
+
+  app.post('/api/product/post', function(req,res){
+    console.log("API PRODUCT POST BY " + req.body.prd_name);
+    var prd_name = req.body.prd_name;
+    var post_result;
+    var options_post = {
+      mode: 'text',
+      pythonPath: '',
+      pythonOptions: ['-u'],
+      scriptPath: '',
+      args: [prd_name]
+    };
+    PythonShell.run('./src/python/productpython/getPost.py',options_post, function(err, results){
+      if(err)throw err;
+      console.log(results);
+      res.json(results);
+    })
   })
 }
