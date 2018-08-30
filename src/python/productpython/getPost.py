@@ -18,9 +18,10 @@ def remove_html_tags(data):
     p = re.compile(r'<.*?>')
     return p.sub('\n', data)
 
-postList=[]
+
 
 def getPost(product_title):
+    postList=""
     driver = webdriver.Chrome('/Users/ikhwan/capstone/chromedriver')
     for i in range (0,3):
         prd1 = 'https://search.naver.com/search.naver?sm=tab_hty.top&where=post&query='
@@ -33,19 +34,26 @@ def getPost(product_title):
             image_tmp1 = soup.select('#sp_blog_'+str(i+1)+' > div > a.sp_thmb.thmb80 > img')
             image_tmp2 = str(image_tmp1[0]).split('src="')
             image_tmp3 = image_tmp2[1].split('"')
-            post_image = image_tmp3[0].replace("\'","")
+            post_image = image_tmp3[0]
         except:
             post_image = '/images/no_img.png' # no_img.png 파일 경로
-        link_tmp1 = soup.find("li",{"id":"sp_blog_"+str(i+1)}).findAll("a")
-        post_link = link_tmp1[2].get('href').replace("\'","")
-        post_title = link_tmp1[2].get('title').replace("\'","")
+
+
+        # link_tmp1 = soup.find("li",{"id":"sp_blog_"+str(i+1)}).findAll("a")
+        link_tmp1 = soup.findAll("a",{"class":"sh_blog_title _sp_each_url _sp_each_title"})
+        post_link = link_tmp1[i].get('href')
+
+        title =link_tmp1[i].get('title')
+        post_title = title
         mess_tmp1 = soup.select("#sp_blog_"+str(i+1)+" > dl > dd.sh_blog_passage")
-        post_message = remove_html_tags(str(mess_tmp1[0])).replace("amp;","").replace("\n","").replace("\'","")
+        # post_message = remove_html_tags(str(mess_tmp1[0])).replace("amp;","").replace("\n","").replace("\'","")
+        post_message = remove_html_tags(str(mess_tmp1[0])).replace("amp;","").replace("\n","")
         # print("이미지 주소 : "+post_image)
         # print("포스트 제목 : " + post_title)
         # print("포스트 요약 : "+post_message)
         # print("포스트 링크 : " + post_link)
-        postList.append([post_image, post_title, post_message, post_link])
+        # postList.append(""+post_image+""+post_title+""+post_message post_link])
+        postList=postList+"<IK@SMD>"+post_image+"<IK@SMD>"+post_title+"<IK@SMD>"+post_message+"<IK@SMD>"+post_link
     driver.quit()
     print(postList)
 
