@@ -16,7 +16,7 @@ import os
 
 def checkID():
     dir_path = os.path.dirname(os.path.realpath(os.getcwd()))
-    driver = webdriver.Chrome('/home/cloudpool/Desktop/apiserver/smd_rest/src/python/chromedriver'))
+    driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver'))
     driver.get('https://www.ssgdfm.com/shop/main')
     driver.switch_to_window(driver.window_handles[0])
     driver.find_element_by_xpath('//*[@id="ssgdf-header"]/div[2]/div/div[2]/ul/li[1]/a').click()

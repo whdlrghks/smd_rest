@@ -21,7 +21,7 @@ def remove_html_tags(data):
 postList=[]
 
 def getPost(product_title):
-    driver = webdriver.Chrome('/Users/ikhwan/capstone/chromedriver')
+    driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver')
     for i in range (0,3):
         prd1 = 'https://search.naver.com/search.naver?sm=tab_hty.top&where=post&query='
         prd2 = product_title.replace(" ","+")

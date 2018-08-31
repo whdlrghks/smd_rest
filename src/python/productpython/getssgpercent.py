@@ -10,7 +10,7 @@ import re
 from selenium import webdriver
 import sys
 
-driver = webdriver.Chrome('/Users/ikhwan/capstone/chromedriver')
+driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver')
 
 
 

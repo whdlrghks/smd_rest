@@ -17,7 +17,7 @@ def remove_html_tags(data):
 
 
 def lotte_2(url):   # url = 상품 페이지 url
-    driver = webdriver.Chrome('/home/cloudpool/Desktop/apiserver/smd_rest/src/python/chromedriver')
+    driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver')
     lt_product = url
     # try:
     driver.get(lt_product)

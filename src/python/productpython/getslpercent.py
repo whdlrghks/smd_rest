@@ -9,7 +9,7 @@ import re
 from selenium import webdriver
 import sys
 
-driver = webdriver.Chrome('/Users/ikhwan/capstone/chromedriver')
+driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver')
 
 #신라
 def getPercent_shilla(url):    # 해당 상품의 신라면세점 적립금 적용 한계 퍼센트를 가져옴, sl_percent 값이 퍼센트값
