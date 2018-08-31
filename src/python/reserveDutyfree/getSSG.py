@@ -15,7 +15,7 @@ driver.implicitly_wait(3)
 driver.find_element_by_xpath('//*[@id="ssgdf-header"]/div[2]/div/div[2]/ul/li[1]/a').click()
 driver.implicitly_wait(6)
 window_before = driver.window_handles[0]
-window_after = driver.window_handles[2]
+window_after = driver.window_handles[1]
 
 driver.switch_to_window(window_after)
 driver.find_element_by_name('userId').send_keys(sys.argv[1])

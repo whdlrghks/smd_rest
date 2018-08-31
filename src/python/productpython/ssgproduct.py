@@ -26,8 +26,6 @@ def ssg_sele(url):
     #driver = new HtmlUnitDriver();
     #new WebDriverWait(driver, 10).until(ExpectedConditions.presenceOfElementLocated(By.id(“element”)));
     driver.get(url)
-
-    sleep(3)
     try:
         html = driver.page_source
         soup = BeautifulSoup(html, 'html.parser')

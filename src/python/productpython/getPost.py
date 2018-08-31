@@ -35,19 +35,23 @@ def getPost(product_title):
             image_tmp2 = str(image_tmp1[0]).split('src="')
             image_tmp3 = image_tmp2[1].split('"')
             post_image = image_tmp3[0]
+            # link_tmp1 = soup.find("li",{"id":"sp_blog_"+str(i+1)}).findAll("a")
+            link_tmp1 = soup.findAll("a",{"class":"sh_blog_title _sp_each_url _sp_each_title"})
+            post_link = link_tmp1[i].get('href')
+
+            title =link_tmp1[i].get('title')
+            post_title = title
+            mess_tmp1 = soup.select("#sp_blog_"+str(i+1)+" > dl > dd.sh_blog_passage")
+            # post_message = remove_html_tags(str(mess_tmp1[0])).replace("amp;","").replace("\n","").replace("\'","")
+            post_message = remove_html_tags(str(mess_tmp1[0])).replace("amp;","").replace("\n","")
         except:
             post_image = '/images/no_img.png' # no_img.png 파일 경로
+            post_title = "검색 결과 없음"
+            post_message = "검색 결과 없음"
+            post_link = " "
 
 
-        # link_tmp1 = soup.find("li",{"id":"sp_blog_"+str(i+1)}).findAll("a")
-        link_tmp1 = soup.findAll("a",{"class":"sh_blog_title _sp_each_url _sp_each_title"})
-        post_link = link_tmp1[i].get('href')
 
-        title =link_tmp1[i].get('title')
-        post_title = title
-        mess_tmp1 = soup.select("#sp_blog_"+str(i+1)+" > dl > dd.sh_blog_passage")
-        # post_message = remove_html_tags(str(mess_tmp1[0])).replace("amp;","").replace("\n","").replace("\'","")
-        post_message = remove_html_tags(str(mess_tmp1[0])).replace("amp;","").replace("\n","")
         # print("이미지 주소 : "+post_image)
         # print("포스트 제목 : " + post_title)
         # print("포스트 요약 : "+post_message)
