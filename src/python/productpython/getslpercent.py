@@ -16,6 +16,7 @@ def getPercent_shilla(url):    # 해당 상품의 신라면세점 적립금 적�
     driver.get(url)
     html = driver.page_source
     soup = BeautifulSoup(html, 'html.parser')
+    driver.quit()
     sl = soup.find("div",{"class" : "save_info_box"}).text
     if '적립금을 사용할 수 없습니다.' in sl:
         sl_percent = 0

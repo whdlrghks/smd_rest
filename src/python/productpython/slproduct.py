@@ -22,7 +22,7 @@ def shilla_2(url):
                 sl_product_normal_price = sl_price_tmp1[0]
                 sl_product_price2 = soup.find("em",{"class" : "pd-discount"}).text
                 sl_price_tmp2 = sl_product_price2.split("(")
-                sl_product_sale_price = sl_price_tmp2[0]
+                sl_product_sale_price = sl_price_tmp2[0].replace("$","")
             else:
                 sl_product_price = soup.find("span",{"class" : "pd-sale"}).text
                 sl_price_tmp = sl_product_price.split("(")
@@ -141,6 +141,7 @@ def shilla_2(url):
             sl_product_ps = 'neg'
         else:
             sl_product_ps = 'pos'
+            
 
         sl_product_normal_price=sl_product_normal_price.replace("$","")
         print(sl_product_normal_price+"/"+sl_product_sale_price+"/"+sl_product_ps)
