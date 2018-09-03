@@ -19,28 +19,33 @@ def remove_html_tags(data):
 def lotte_2(url):   # url = 상품 페이지 url
     driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver')
     lt_product = url
-    # try:
     driver.get(lt_product)
     timeout = 7
     element_present = EC.presence_of_element_located((By.ID, 'prdPriceBenefit'))
     WebDriverWait(driver, timeout).until(element_present)
     html = driver.page_source
-    soup = BeautifulSoup(html, 'html.parser')
-    try:
-        lt_price = lt_product_normal_price = soup.select("#prdPriceBenefit > div.infoData.price > dl.member > dd > div.priceArea > strong")
-        lt_product_normal_price = remove_html_tags(str(lt_price[0])).replace("\n","").replace("$","")
-    except:
-        lt_price = soup.find("meta",{"property" : "rb:originalPrice"})
-        lt_product_normal_price = lt_price.get('content')
-    if '일시품절 상품 입니다' in html:   #일시품점일 경우 neg, 재고가 남아 있을 경우 pos
-        lt_product_ps = 'neg'
-    else:
-        lt_product_ps = 'pos'
     driver.quit()
-    lt_product_normal_price=lt_product_normal_price.replace(".00","")
-    print(lt_product_normal_price+"/"+lt_product_ps)
-    # except:
-    #     print("No price/No storage")
+    try:
+        soup = BeautifulSoup(html, 'html.parser')
+        try:
+            lt_price = lt_product_normal_price = soup.select("#prdPriceBenefit > div.infoData.price > dl.member > dd > div.priceArea > strong")
+            lt_product_sale_price = remove_html_tags(str(lt_price[0])).replace("\n","").replace("$","")
+            lt_price2 = soup.find("meta",{"property" : "rb:originalPrice"})
+            lt_product_normal_price = lt_price2.get('content')
+        except:
+            lt_price = soup.find("meta",{"property" : "rb:originalPrice"})
+            lt_product_normal_price = lt_price.get('content')
+            lt_product_sale_price = '로그인 필요'
+        if '일시품절 상품 입니다' in html:   #일시품점일 경우 neg, 재고가 남아 있을 경우 pos
+            lt_product_ps = 'neg'
+        else:
+            lt_product_ps = 'pos'
+        if ".00" in lt_product_normal_price:
+            lt_product_normal_price=lt_product_normal_price.replace(".00","")
+
+        print(lt_product_normal_price+"/"+lt_product_sale_price+"/"+lt_product_ps)
+    except:
+        print("No price/No price/No storage")
 
 
 lotte_2(sys.argv[1])
