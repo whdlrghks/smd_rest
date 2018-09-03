@@ -41,15 +41,15 @@ req2 = soup.find("a",{"id" : "selectSvmn_02"}).find("strong")
 price2 = remove_html_tags(str(req2))
 price2 = "".join(price2.split());
 
-#PC전용 적립금
-req3 = soup.find("a",{"id" : "selectSvmn_03"}).find("strong")
-price3 = remove_html_tags(str(req3))
-price3 = "".join(price3.split());
+# #PC전용 적립금 - 현재 사라짐
+# req3 = soup.find("a",{"id" : "selectSvmn_03"}).find("strong")
+# price3 = remove_html_tags(str(req3))
+# price3 = "".join(price3.split());
 
 #모바일 전용 적립금
 req4 = soup.find("a",{"id" : "selectSvmn_04"}).find("strong")
 price4 = remove_html_tags(str(req4))
 price4 = "".join(price4.split());
 
-allprice = int(price1) + int(price2) + int(price3) + int(price4);
+allprice = int(price1) + int(price2) + int(price4);
 print(allprice)
