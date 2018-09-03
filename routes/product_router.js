@@ -190,24 +190,25 @@ module.exports = function(app) {
                 result= results;
                 callback(null,"finish");
               } else {
+                percent_prd=results[0].split("/")[3];
                 console.log("SL result " + results);
                 result= results;
                 callback(null,"finish");
               }
             });
-          },
-          function(callback){
-            if(req.body.LT_reserved!=''){
-              PythonShell.run('./src/python/productpython/getltpercent.py', options_lt, function(err, percent) {
-                //result = 가격 / 재고
-                console.log("LT percent",percent);
-                if(percent!=null||percent!=undefined){
-                  percent_prd=percent[0];
-                }
-                callback(null,"finish");
-              });
-            }
           }
+          // ,function(callback){
+          //   if(req.body.LT_reserved!=''){
+          //     PythonShell.run('./src/python/productpython/getltpercent.py', options_lt, function(err, percent) {
+          //       //result = 가격 / 재고
+          //       console.log("LT percent",percent);
+          //       if(percent!=null||percent!=undefined){
+          //         percent_prd=percent[0];
+          //       }
+          //       callback(null,"finish");
+          //     });
+          //   }
+          // }
         ],
         function(err, result_callback) {
           if (err) {
@@ -277,24 +278,25 @@ module.exports = function(app) {
                 result= results;
                 callback(null,"finish");
               } else {
+                percent_prd=results[0].split("/")[3];
                 console.log("SSG result " + results);
                 result= results;
                 callback(null,"finish");
               }
             });
-          },
-          function(callback){
-            if(req.body.SSG_reserved!=''){
-              PythonShell.run('./src/python/productpython/getssgpercent.py', options_ssg, function(err, percent) {
-                //result = 가격 / 재고
-                console.log("SSG percent",percent);
-                if(percent!=null||percent!=undefined){
-                  percent_prd=percent[0];
-                }
-                callback(null,"finish");
-              });
-            }
           }
+          // ,function(callback){
+          //   if(req.body.SSG_reserved!=''){
+          //     PythonShell.run('./src/python/productpython/getssgpercent.py', options_ssg, function(err, percent) {
+          //       //result = 가격 / 재고
+          //       console.log("SSG percent",percent);
+          //       if(percent!=null||percent!=undefined){
+          //         percent_prd=percent[0];
+          //       }
+          //       callback(null,"finish");
+          //     });
+          //   }
+          // }
         ],
         function(err, result_callback) {
           if (err) {

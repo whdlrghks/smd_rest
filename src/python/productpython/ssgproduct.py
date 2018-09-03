@@ -39,10 +39,20 @@ def ssg_sele(url):
         #script = script_price[78]
         #splitdata = script.text.strip().split("jQuery")[0]
         #ssg_storage = splitdata.split("var")[11].split("\"")[1]
+
         if '일시품절' in html:   #일시품점일 경우 neg, 재고가 남아 있을 경우 pos
             ssg_product_ps = 'neg'
         else:
             ssg_product_ps = 'pos'
+
+        try:
+            ssg_brand_percent = soup.find("div",{"class" : "saveMoneyInfo"}).text
+            if '적립금 사용이 불가' in ssg_brand_percent:
+                ssg_percent = 0
+            else:
+                ssg_percent = int(soup.find("div",{"class" : "saveMoneyInfo"}).find("span").text.replace("%",""))
+        except:
+            ssg_percent = 0
 
 
         if '서비스 이용에 불편을 드려 죄송합니다.' in html:
@@ -179,11 +189,11 @@ def ssg_sele(url):
                 else:
                     ssg_discount_price = ssg_price1
 
-            print(ssg_discount_price+"/"+ssg_sell_price+"/"+ssg_product_ps)
+        print(ssg_sell_price+"/"+ssg_discount_price+"/"+ssg_product_ps+"/"+str(ssg_percent))
 
     except UnexpectedAlertPresentException:
-        driver.quit()
         Alert(driver).dismiss()
+        driver.quit()
         print("No price/"+"neg")
 
     # except:
