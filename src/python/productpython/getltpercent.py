@@ -17,6 +17,7 @@ def getPercent_lotte(url):    # 해당 상품의 롯데면세점 적립금 적�
     driver.get(url)
     html = driver.page_source
     soup = BeautifulSoup(html, 'html.parser')
+    driver.quit()
     if '적립금 사용불가' in html:
         lt_percent = 0
     else:
