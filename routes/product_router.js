@@ -76,108 +76,6 @@ module.exports = function(app) {
         result[0] = product;
         console.log(product);
         res.json(result);
-        //신라 URL이 있는 경우
-        // async.parallel([
-        //     function(callback) {
-        //       if (product[0].prd_SLURL != undefined) {
-        //         console.log("SHINLA IN");
-        //         var options_sl = {
-        //           mode: 'text',
-        //           pythonPath: '',
-        //           pythonOptions: ['-u'],
-        //           scriptPath: '',
-        //           args: [product[0].prd_SLURL]
-        //         }
-        //         PythonShell.run('./src/python/productpython/slproduct.py', options_sl, function(err, results) {
-        //           //result = 가격 / 재고
-        //           console.log(results);
-        //           if (err) throw err;
-        //           if (results == "No price/No storage") {
-        //             result[1] = results;
-        //             callback(null, "No result");
-        //           } else {
-        //             console.log("SL result " + results);
-        //             result[1] = results;
-        //             callback(null, "Get info");
-        //           }
-        //         });
-        //       } else {
-        //         result[1] = ['No price/No storage'];
-        //         callback(null, null);
-        //       }
-        //     },
-        //     function(callback) {
-        //       if (product[0].prd_ProductURL != undefined) {
-        //         var options_lt = {
-        //           mode: 'text',
-        //           pythonPath: '',
-        //           pythonOptions: ['-u'],
-        //           scriptPath: '',
-        //           args: [product[0].prd_ProductURL]
-        //         }
-        //         PythonShell.run('./src/python/productpython/ltproduct.py', options_lt, function(err, results) {
-        //           //result = 가격 / 재고
-        //
-        //           if (err) throw err;
-        //           if (results == "No price/No storage") {
-        //             result[2] = results;
-        //             callback(null, "No result");
-        //           } else {
-        //             console.log("LT result " + results);
-        //             result[2] = results;
-        //             callback(null, "Get info");
-        //           }
-        //         });
-        //       } else {
-        //         result[2] = ['No price/No storage'];
-        //         callback(null, null);
-        //       }
-        //     },
-        //     function(callback) {
-        //
-        //       if (product[0].prd_SSGURL != '42') {
-        //         var options_ssg = {
-        //           mode: 'text',
-        //           pythonPath: '',
-        //           pythonOptions: ['-u'],
-        //           scriptPath: '',
-        //           args: [product[0].prd_SSGURL]
-        //         }
-        //         PythonShell.run('./src/python/productpython/ssgproduct.py', options_ssg, function(err, results) {
-        //
-        //           //result = 가격 / 재고
-        //           if (err) throw err;
-        //           if (results == "No price/No storage") {
-        //             result[3] = results;
-        //             callback(null, "No result");
-        //           } else {
-        //             result[3] = results;
-        //             console.log("SSG result " + results);
-        //             callback(null, "Get info");
-        //           }
-        //         });
-        //       } else {
-        //         result[3] = ['No price/No storage'];
-        //         callback(null, null);
-        //       }
-        //     }
-        //   ],
-        //   function(err, result_callback) {
-        //     if (err) {
-        //       console.log("ERROR FROM GET THE PRODUCT ABOUT", product[0]._id);
-        //       res.json("Error From get the product");
-        //     } else {
-        //       console.log("FINISH GET THE PRODUCT ABOUT", product[0]._id);
-        //
-        //       res.json(result);
-        //     }
-        //   })
-        // result[1] = "신라 정보";
-        // result[2] = "롯데 정보";
-        // result[3] = "신세계 정보";
-
-
-
       })
   })
   app.post('/api/product/SL', function(req, res) {
@@ -353,34 +251,6 @@ module.exports = function(app) {
       result = ['No price/No storage'];
       res.json(result);
     }
-    //
-    // var prd_url = req.body.prd_url;
-    // var result;
-    // if (prd_url != undefined) {
-    //   var options_lt = {
-    //     mode: 'text',
-    //     pythonPath: '',
-    //     pythonOptions: ['-u'],
-    //     scriptPath: '',
-    //     args: [prd_url]
-    //   }
-    //   PythonShell.run('./src/python/productpython/ltproduct.py', options_lt, function(err, results) {
-    //     //result = 가격 / 재고
-    //
-    //     if (err) throw err;
-    //     if (results == "No price/No storage") {
-    //       result = results;
-    //       res.json(result);
-    //     } else {
-    //       console.log("LT result " + results);
-    //       result = results;
-    //       res.json(result);
-    //     }
-    //   });
-    // } else {
-    //   result = ['No price/No storage'];
-    //   res.json(result);
-    // }
 
   })
   app.post('/api/product/SSG', function(req, res) {
@@ -469,34 +339,6 @@ module.exports = function(app) {
       res.json(result);
     }
 
-    // var result;
-    //
-    // if (prd_url != '42') {
-    //   var options_ssg = {
-    //     mode: 'text',
-    //     pythonPath: '',
-    //     pythonOptions: ['-u'],
-    //     scriptPath: '',
-    //     args: [prd_url]
-    //   }
-    //   PythonShell.run('./src/python/productpython/ssgproduct.py', options_ssg, function(err, results) {
-    //
-    //     //result = 가격 / 재고
-    //     if (err) throw err;
-    //     if (results == "No price/No storage") {
-    //       result = results;
-    //       res.json(result);
-    //     } else {
-    //       result = results;
-    //       console.log("SSG result " + results);
-    //       res.json(result);
-    //     }
-    //   });
-    // } else {
-    //   result = ['No price/No storage'];
-    //   res.json(result);
-    // }
-
   })
 
   app.post('/api/product/post', function(req,res){
@@ -515,5 +357,82 @@ module.exports = function(app) {
       console.log(results);
       res.json(results);
     })
+  })
+
+  app.get('/api/autocomplete',function(req,res){
+    console.log("API AUTOCOMPLETE LIST ");
+    //나중에 한글 브랜드 추가되면 검색에 추가
+    product_list.find( { } , { "_id":false, "prd_Name": true, "prd_Brand": true } , function(err, list){
+      var productname_list=[];
+      var productbrand_list=[];
+      for (var i = 0 ; i < list.length-1 ; i++){
+        productname_list[i] = list[i].prd_Name;
+        productbrand_list[i] = list[i].prd_Brand;
+      }
+
+      var result = productname_list.concat(productbrand_list)
+
+      let single = result.reduce(( a, b ) => {
+      	if( a.indexOf(b) < 0 ) a.push(b) ;
+      	return a ;
+      }, []) ; // <-- 초기값 빈 배열 세팅!
+      res.json(single);
+    })
+  })
+
+  app.post('/api/product/search', function(req, res) {
+    var startPage = req.body.startPage;
+    var limit = req.body.limitPage;
+    var prd_Name={$regex:req.body.searchbox, $options: 'i' };
+    var prd_Brand={$regex:req.body.searchbox,  $options: 'i' };
+    //대소문자 구분 No =  '$options': 'i'
+    if(req.body.category=="전체"){
+
+      var findoption = {$or:[ {prd_Name: prd_Name }, {prd_Brand:prd_Brand} ]};
+    }
+    else if(req.body.category=="브랜드"){
+      var findoption = {prd_Brand:prd_Brand};
+    }
+    else if(req.body.category=="상품 이름"){
+      var findoption = {prd_Name:prd_Name};
+    }
+    else{
+      console.log("NO RESULT ABOUT CATEGORIES");
+      res.json("no result")
+    }
+    startPage = startPage * limit;
+    console.log(findoption);
+    //pagetoken 필요 - 한페이지 당 갯수 지정
+    if (startPage == 0) {
+      product_list.find(
+        findoption
+      )
+        .limit(limit)
+        .exec(function(err, product) {
+          if(err){
+            console.log(err);
+          }
+          product_list.count(findoption, function(err, count) {
+            var result = [];
+            result[0] = Math.ceil(count / limit);
+            result[1] = product;
+            result[2] = startPage;
+            res.json(result);
+          })
+        })
+    } else {
+      product_list.find(findoption)
+        .limit(limit)
+        .skip(startPage)
+        .exec(function(err, product) {
+          product_list.count(findoption, function(err, count) {
+            var result = [];
+            result[0] = Math.ceil(count / limit);
+            result[1] = product;
+            result[2] = startPage;
+            res.json(result);
+          })
+        })
+    }
   })
 }
