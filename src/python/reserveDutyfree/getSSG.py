@@ -30,14 +30,19 @@ except :
 driver.switch_to_window(driver.window_handles[0])
 driver.find_element_by_xpath('//*[@id="ssgdf-header"]/div[2]/div/div[2]/ul/li[2]/a').click()
 driver.implicitly_wait(1)
-driver.find_element_by_xpath('//*[@id="Form1"]/div/div[2]/div[1]/div[1]/div[2]/ul/li[2]/a').click()
+driver.find_element_by_xpath('//*[@id="Form1"]/div/div/div[1]/div[1]/div[2]/ul/li[2]/a').click()
+
 driver.implicitly_wait(3)
 html = driver.page_source
 soup = BeautifulSoup(html,'html.parser')
 driver.quit()
 #총 적립금만 가져오기
 req1 = soup.find("p",{"class" : "dataTxt"}).find("span")
+
 price1 = remove_html_tags(str(req1))
 price1 = "".join(price1.split());
 price1 = price1.replace("원","");
-print(price1)
+price1 = price1.replace(",","")
+reserved_1 = int(price1) / 1100
+reserved_final = str(round(reserved_1,2))
+print(reserved_final)

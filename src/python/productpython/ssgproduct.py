@@ -46,11 +46,11 @@ def ssg_sele(url):
             ssg_product_ps = 'pos'
 
         try:
-            ssg_brand_percent = soup.find("div",{"class" : "saveMoneyInfo"}).text
+            ssg_brand_percent = soup.find("li",{"class" : "paragraph-column"}).text
             if '적립금 사용이 불가' in ssg_brand_percent:
                 ssg_percent = 0
             else:
-                ssg_percent = int(soup.find("div",{"class" : "saveMoneyInfo"}).find("span").text.replace("%",""))
+                ssg_percent = int(soup.find("li",{"class" : "paragraph-column"}).find("span").text.replace("%",""))
         except:
             ssg_percent = 0
 

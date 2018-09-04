@@ -3,6 +3,14 @@ var product_list = require('../models/product_list');
 var PythonShell = require('python-shell');
 
 module.exports = function(app) {
+  app.post('/api/index', function(req,res){
+    product_list.aggregate(
+       [ { $sample: { size: 8 } } ]
+    ).exec(function(err, doc){
+      res.json(doc);
+      // console.log(doc);
+    })
+  })
 
   //처음 카테고리 들어갈때에 최종적으로 몇개인지 알아낸다. 그래서 그만큼의 페이지를 만든다.
   app.post('/api/category', function(req, res) {
@@ -84,7 +92,7 @@ module.exports = function(app) {
     var result ;
     var percent_prd=0;
     if (prd_url != undefined) {
-      console.log("SHINLA IN");
+      console.log("SHINLA IN",prd_url);
       var options_sl = {
         mode: 'text',
         pythonPath: '',
@@ -125,7 +133,12 @@ module.exports = function(app) {
           if (err) {
             res.json("Error From get the product");
           } else {
-            var price = result[0].split("/")[0];
+            if(result[0].split("/")[1]=="로그인 필요"){
+              var price = result[0].split("/")[0];
+            }
+            else{
+              var price = result[0].split("/")[1];
+            }
             var options_sl_cal = {
               mode: 'text',
               pythonPath: '',
@@ -140,14 +153,15 @@ module.exports = function(app) {
                 var discount_price = price;
             else{
                 if (reserve >= (price * (percent_prd/100))){
-                  var discount_price = price * (1 - float(percent_prd/100))
+                  var discount_price = price * (1 - parseFloat(percent_prd/100))
                 }
 
                 else{
                   var discount_price = price - reserve
                 }
             }
-            result = result+"/"+discount_price;
+            console.log("[SL DICOUNT RESULT percent_prd = ",percent_prd,"discount_price = ",discount_price.toFixed(2),"]");
+            result = result+"/"+discount_price.toFixed(2);
             res.json(result);
             // PythonShell.run('./src/python/productpython/cal_reserve.py', options_sl_cal, function(err, discount_price) {
             //   //result = 가격 / 재고
@@ -172,7 +186,7 @@ module.exports = function(app) {
     var result ;
     var percent_prd=0;
     if (prd_url != undefined) {
-      console.log("LOTTE IN");
+      console.log("LOTTE IN",prd_url);
       var options_lt = {
         mode: 'text',
         pythonPath: '',
@@ -191,7 +205,7 @@ module.exports = function(app) {
                 callback(null,"finish");
               } else {
                 percent_prd=results[0].split("/")[3];
-                console.log("SL result " + results);
+                console.log("LT result " + results);
                 result= results;
                 callback(null,"finish");
               }
@@ -214,7 +228,12 @@ module.exports = function(app) {
           if (err) {
             res.json("Error From get the product");
           } else {
-            var price = result[0].split("/")[0];
+            if(result[0].split("/")[1]=="로그인 필요"){
+              var price = result[0].split("/")[0];
+            }
+            else{
+              var price = result[0].split("/")[1];
+            }
             var options_lt_cal = {
               mode: 'text',
               pythonPath: '',
@@ -229,14 +248,15 @@ module.exports = function(app) {
                 var discount_price = price;
             else{
                 if (reserve >= (price * (percent_prd/100))){
-                  var discount_price = price * (1 - float(percent_prd/100))
+                  var discount_price = price * (1 - parseFloat(percent_prd/100))
                 }
 
                 else{
                   var discount_price = price - reserve
                 }
             }
-            result = result+"/"+discount_price;
+            console.log("[LT DICOUNT RESULT percent_prd = ",percent_prd,"discount_price = ",discount_price.toFixed(2),"]");
+            result = result+"/"+discount_price.toFixed(2);
             res.json(result);
             // PythonShell.run('./src/python/productpython/cal_reserve.py', options_lt_cal, function(err, discount_price) {
             //   //result = 가격 / 재고
@@ -302,7 +322,12 @@ module.exports = function(app) {
           if (err) {
             res.json("Error From get the product");
           } else {
-            var price = result[0].split("/")[0];
+            if(result[0].split("/")[1]=="로그인 필요"){
+              var price = result[0].split("/")[0];
+            }
+            else{
+              var price = result[0].split("/")[1];
+            }
             var options_ssg_cal = {
               mode: 'text',
               pythonPath: '',
@@ -317,14 +342,15 @@ module.exports = function(app) {
                 var discount_price = price;
             else{
                 if (reserve >= (price * (percent_prd/100))){
-                  var discount_price = price * (1 - float(percent_prd/100))
+                  var discount_price = price * (1 - parseFloat(percent_prd/100))
                 }
 
                 else{
                   var discount_price = price - reserve
                 }
             }
-            result = result+"/"+discount_price;
+            console.log("[SSG DICOUNT RESULT percent_prd = ",percent_prd,"discount_price = ",discount_price.toFixed(2),"]");
+            result = result+"/"+discount_price.toFixed(2);
             res.json(result);
             // PythonShell.run('./src/python/productpython/cal_reserve.py', options_ssg_cal, function(err, discount_price) {
             //   //result = 가격 / 재고

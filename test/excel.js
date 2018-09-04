@@ -44,8 +44,7 @@ for(let i = 1; i <= 9907; i++){
 //   console.log(product_list);
 // })
 // product_list.find({
-// prd_3th: '바디 워시'
-// }).limit(3)
+// }).limit(6)
 //     .exec(function (err, doc) {
 //         console.log(doc);
 //     });

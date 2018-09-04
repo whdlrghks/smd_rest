@@ -31,6 +31,11 @@ html = driver.page_source
 soup = BeautifulSoup(html,'html.parser')
 driver.quit()
 reserved = str(soup.find("dl",{"class":"save"}).find("dd").find("span").find("em"))
+#원화 -> 달러 변환
+
 price = remove_html_tags(reserved)
 price = "".join(price.split());
-print(price)
+price = price.replace(",","")
+reserved_1 = int(price)/1100
+reserved_final = str(round(reserved_1,2))
+print(reserved_final)
