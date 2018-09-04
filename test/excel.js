@@ -44,15 +44,20 @@ var product_list = require('../models/product_list');
 //   console.log(product_list);
 // })
 // product_list.find({
-// prd_3th: '바디 워시'
-// }).limit(3)
+// }).limit(6)
 //     .exec(function (err, doc) {
 //         console.log(doc);
 //     });
 
-
-product_list.count({
-  prd_3th: '스킨/토너'
-}, function(err,count){
-  console.log(count);
+product_list.aggregate(
+   [ { $sample: { size: 8 } } ]
+).exec(function(err, doc){
+  console.log(doc);
 })
+
+//
+// product_list.count({
+//   prd_3th: '스킨/토너'
+// }, function(err,count){
+//   console.log(count);
+// })

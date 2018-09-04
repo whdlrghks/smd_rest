@@ -8,6 +8,9 @@ from bs4 import BeautifulSoup
 import re
 from selenium import webdriver
 import sys
+def remove_html_tags(data):
+    p = re.compile(r'<.*?>')
+    return p.sub('\n', data)
 
 driver = webdriver.Chrome('/Users/ikhwan/capstone/chromedriver')
 
