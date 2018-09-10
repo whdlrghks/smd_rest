@@ -1,5 +1,5 @@
 var async = require('async'), mime = require('mime');
-var product_list = require('../models/product_list');
+var product_list = require('../models/product_list_test');
 var PythonShell = require('python-shell');
 
 module.exports = function(app) {
