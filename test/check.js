@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var mongodb = require('../config/mongodb.js');
 mongodb();
 let XLSX = require("xlsx");
-var product_list = require('../models/product_list');
+var product_list = require('../models/product_list_test');
 
 // var iterifyArr = function(arr) {
 //   var cur = 0;
@@ -16,7 +16,11 @@ var product_list = require('../models/product_list');
 // };
 const fs = require('fs');
 
-product_list.find()
+product_list.count({
+  prd_3th: '스킨/토너'
+}, function(err,count){
+  console.log(count);
+})
 
 //
 // product_list.find({}, {

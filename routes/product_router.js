@@ -2,7 +2,8 @@ var async = require('async'), mime = require('mime');
 var product_list = require('../models/product_list_test');
 var PythonShell = require('python-shell');
 
-module.exports = function(app) {
+module.exports = function(app, list) {
+
   app.post('/api/index', function(req,res){
     product_list.aggregate(
        [ { $sample: { size: 8 } } ]
@@ -390,22 +391,23 @@ module.exports = function(app) {
   app.get('/api/autocomplete',function(req,res){
     console.log("API AUTOCOMPLETE LIST ");
     //나중에 한글 브랜드 추가되면 검색에 추가
-    product_list.find( { } , { "_id":false, "prd_Name": true, "prd_Brand": true } , function(err, list){
-      var productname_list=[];
-      var productbrand_list=[];
-      for (var i = 0 ; i < list.length-1 ; i++){
-        productname_list[i] = list[i].prd_Name;
-        productbrand_list[i] = list[i].prd_Brand;
-      }
-
-      var result = productname_list.concat(productbrand_list)
-
-      let single = result.reduce(( a, b ) => {
-      	if( a.indexOf(b) < 0 ) a.push(b) ;
-      	return a ;
-      }, []) ; // <-- 초기값 빈 배열 세팅!
-      res.json(single);
-    })
+    // product_list.find( { } , { "_id":false, "prd_Name": true, "prd_Brand": true } , function(err, list){
+    //   var productname_list=[];
+    //   var productbrand_list=[];
+    //   for (var i = 0 ; i < list.length-1 ; i++){
+    //     productname_list[i] = list[i].prd_Name;
+    //     productbrand_list[i] = list[i].prd_Brand;
+    //   }
+    //
+    //   var result = productname_list.concat(productbrand_list)
+    //
+    //   let single = result.reduce(( a, b ) => {
+    //   	if( a.indexOf(b) < 0 ) a.push(b) ;
+    //   	return a ;
+    //   }, []) ; // <-- 초기값 빈 배열 세팅!
+    //   res.json(single);
+    // })
+    res.json(list);
   })
 
   app.post('/api/product/search', function(req, res) {
