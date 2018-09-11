@@ -101,6 +101,7 @@ module.exports = function(app, list) {
         scriptPath: '',
         args: [prd_url]
       }
+      try{
       async.parallel([
           function(callback){
             PythonShell.run('./src/python/productpython/slproduct.py', options_sl, function(err, results) {
@@ -173,6 +174,10 @@ module.exports = function(app, list) {
 
           }
         })
+      }catch(e){
+        console.log("[No product in SL]",prd_url);
+        res.json("현재 세면대/시스템에 문제가/있습니다. 문의/부탁드립니다.")
+      }
 
     } else {
       result = ['No price/No storage'];
@@ -194,80 +199,74 @@ module.exports = function(app, list) {
         pythonOptions: ['-u'],
         scriptPath: '',
         args: [prd_url]
-      }
-      async.parallel([
-          function(callback){
-            PythonShell.run('./src/python/productpython/ltproduct.py', options_lt, function(err, results) {
-              //result = 가격 / 재고
-              console.log(results);
-              if (err) throw err;
-              if (results == "No price/No storage") {
-                result= results;
-                callback(null,"finish");
-              } else {
-                percent_prd=results[0].split("/")[3];
-                console.log("LT result " + results);
-                result= results;
-                callback(null,"finish");
+      };
+      try{
+        async.parallel([
+            function(callback){
+              PythonShell.run('./src/python/productpython/ltproduct.py', options_lt, function(err, results) {
+                //result = 가격 / 재고
+                console.log(results);
+                if (err) throw err;
+                if (results == "No price/No storage") {
+                  result= results;
+                  callback(null,"finish");
+                } else {
+                  percent_prd=results[0].split("/")[3];
+                  console.log("LT result " + results);
+                  result= results;
+                  callback(null,"finish");
+                }
+              });
+            }
+          ],
+          function(err, result_callback) {
+            if (err) {
+              res.json("Error From get the product");
+            } else {
+              if(result[0].split("/")[1]=="로그인 필요"){
+                var price = result[0].split("/")[0];
               }
-            });
-          }
-          // ,function(callback){
-          //   if(req.body.LT_reserved!=''){
-          //     PythonShell.run('./src/python/productpython/getltpercent.py', options_lt, function(err, percent) {
-          //       //result = 가격 / 재고
-          //       console.log("LT percent",percent);
-          //       if(percent!=null||percent!=undefined){
-          //         percent_prd=percent[0];
-          //       }
-          //       callback(null,"finish");
-          //     });
-          //   }
-          // }
-        ],
-        function(err, result_callback) {
-          if (err) {
-            res.json("Error From get the product");
-          } else {
-            if(result[0].split("/")[1]=="로그인 필요"){
-              var price = result[0].split("/")[0];
-            }
-            else{
-              var price = result[0].split("/")[1];
-            }
-            var options_lt_cal = {
-              mode: 'text',
-              pythonPath: '',
-              pythonOptions: ['-u'],
-              scriptPath: '',
-              args: [percent_prd,price,req.body.LT_reserved]
-            }
-            percent_prd=percent_prd*1;
-            price= price*1;
-            var reserve = req.body.LT_reserved*1;
-            if(percent_prd == 0)
-                var discount_price = price;
-            else{
-                if (reserve >= (price * (percent_prd/100))){
-                  var discount_price = price * (1 - parseFloat(percent_prd/100))
-                }
+              else{
+                var price = result[0].split("/")[1];
+              }
+              var options_lt_cal = {
+                mode: 'text',
+                pythonPath: '',
+                pythonOptions: ['-u'],
+                scriptPath: '',
+                args: [percent_prd,price,req.body.LT_reserved]
+              }
+              percent_prd=percent_prd*1;
+              price= price*1;
+              var reserve = req.body.LT_reserved*1;
+              if(percent_prd == 0)
+                  var discount_price = price;
+              else{
+                  if (reserve >= (price * (percent_prd/100))){
+                    var discount_price = price * (1 - parseFloat(percent_prd/100))
+                  }
 
-                else{
-                  var discount_price = price - reserve
-                }
-            }
-            console.log("[LT DICOUNT RESULT percent_prd = ",percent_prd,"discount_price = ",discount_price.toFixed(2),"]");
-            result = result+"/"+discount_price.toFixed(2);
-            res.json(result);
-            // PythonShell.run('./src/python/productpython/cal_reserve.py', options_lt_cal, function(err, discount_price) {
-            //   //result = 가격 / 재고
-            //   console.log("LT_discount_price",discount_price);
-            //   result = result+"/"+discount_price;
-            //   res.json(result);
-            // });
+                  else{
+                    var discount_price = price - reserve
+                  }
+              }
+              console.log("[LT DICOUNT RESULT percent_prd = ",percent_prd,"discount_price = ",discount_price.toFixed(2),"]");
+              result = result+"/"+discount_price.toFixed(2);
+              res.json(result);
+              // PythonShell.run('./src/python/productpython/cal_reserve.py', options_lt_cal, function(err, discount_price) {
+              //   //result = 가격 / 재고
+              //   console.log("LT_discount_price",discount_price);
+              //   result = result+"/"+discount_price;
+              //   res.json(result);
+              // });
 
-          }
-        })
+            }
+          })
+      }catch(e){
+        console.log("[No product in LT]",prd_url);
+        res.json("현재 세면대/시스템에 문제가/있습니다. 문의/부탁드립니다.")
+      }
+
 
     } else {
       result = ['No price/No storage'];
@@ -289,6 +288,7 @@ module.exports = function(app, list) {
         scriptPath: '',
         args: [prd_url]
       }
+      try{
       async.parallel([
           function(callback){
             PythonShell.run('./src/python/productpython/ssgproduct.py', options_ssg, function(err, results) {
@@ -362,6 +362,10 @@ module.exports = function(app, list) {
 
           }
         })
+      }catch(e){
+        console.log("[No product in SSG]",prd_url);
+        res.json("현재 세면대/시스템에 문제가/있습니다. 문의/부탁드립니다.")
+      }
 
     } else {
       result = ['No price/No storage'];
