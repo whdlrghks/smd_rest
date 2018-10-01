@@ -17,7 +17,7 @@ var port = 5050;
 
 //스키마 생성
 var list;
-var product_list = require('./models/product_list_test');
+var product_list = require('./models/product_list');
 var timestamp2= new Date().getTime();
 product_list.find( {} , { "_id":false, "prd_Name": true, "prd_Brand": true } , function(err, list){
   var productname_list=[];

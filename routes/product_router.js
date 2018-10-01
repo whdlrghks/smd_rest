@@ -1,5 +1,5 @@
 var async = require('async'), mime = require('mime');
-var product_list = require('../models/product_list_test');
+var product_list = require('../models/product_list');
 var PythonShell = require('python-shell');
 var user_resevered = require('../models/user_resevered');
 var review = require('../models/review_product');
