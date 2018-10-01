@@ -34,9 +34,11 @@ product_list.find( {} , { "_id":false, "prd_Name": true, "prd_Brand": true } , f
     return a ;
   }, []) ; // <-- 초기값 빈 배열 세팅!
   console.log('Check time with product_list_test ', new Date().getTime() - timestamp2, 'ms');
+  var auth_router = require('./routes/auth_router')(app);
   var python_router = require('./routes/python_router')(app);
   var product_router = require('./routes/product_router')(app,list);
 })
+
 
 
 // // [CONFIGURE ROUTER] - 스키마 전달

@@ -9,9 +9,15 @@ def remove_html_tags(data):
 
 
 
-dir_path = os.path.dirname(os.path.realpath(os.getcwd()))
-driver = webdriver.Chrome('/Users/ikhwan/capstone/chromedriver')
+# dir_path = os.path.dirname(os.path.realpath(os.getcwd()))
+# driver = webdriver.Chrome('/Users/ikhwan/capstone/chromedriver')
+options = webdriver.ChromeOptions()
+options.add_argument('headless')
+options.add_argument('window-size=1920x1080')
+options.add_argument("--disable-gpu")
+# 혹은 options.add_argument("--disable-gpu")
 
+driver = webdriver.Chrome('/Users/ikhwan/capstone/chromedriver', chrome_options=options)
 
 driver.get('https://www.shilladfs.com/estore/kr/ko/login')
 driver.find_element_by_xpath('//*[@id="container"]/div[1]/div/div/div[2]/div/a').click()

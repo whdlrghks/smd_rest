@@ -22,7 +22,13 @@ def remove_html_tags(data):
 
 def getPost(product_title):
     postList=""
-    driver = webdriver.Chrome('/Users/ikhwan/capstone/chromedriver')
+    options = webdriver.ChromeOptions()
+    options.add_argument('headless')
+    options.add_argument('window-size=1920x1080')
+    options.add_argument("--disable-gpu")
+    # 혹은 options.add_argument("--disable-gpu")
+
+    driver = webdriver.Chrome('/Users/ikhwan/capstone/chromedriver', chrome_options=options)
     for i in range (0,3):
         prd1 = 'https://search.naver.com/search.naver?sm=tab_hty.top&where=post&query='
         prd2 = product_title.replace(" ","+")
@@ -31,9 +37,12 @@ def getPost(product_title):
         html = driver.page_source
         soup = BeautifulSoup(html, 'html.parser')
         try:
-            image_tmp1 = soup.select('#sp_blog_'+str(i+1)+' > div > a.sp_thmb.thmb80 > img')
-            image_tmp2 = str(image_tmp1[0]).split('src="')
-            image_tmp3 = image_tmp2[1].split('"')
+            try:
+                image_tmp1 = soup.select('#sp_blog_'+str(i+1)+' > div > a.sp_thmb.thmb80 > img')
+                image_tmp2 = str(image_tmp1[0]).split('src="')
+                image_tmp3 = image_tmp2[1].split('"')
+            except:
+                image_tmp3[0]='/images/no_img.png'
             post_image = image_tmp3[0]
             # link_tmp1 = soup.find("li",{"id":"sp_blog_"+str(i+1)}).findAll("a")
             link_tmp1 = soup.findAll("a",{"class":"sh_blog_title _sp_each_url _sp_each_title"})
