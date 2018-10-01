@@ -34,7 +34,7 @@ def ssg_sele(url):
     driver.get(url)
     # title = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.ID,"totalAmtDal")))
     #driver.implicitly_wait(8);
-    title = WebDriverWait(driver, 300) \
+    title = WebDriverWait(driver, 600) \
         .until(EC.presence_of_element_located((By.ID, "totalAmtDal")))
     html = driver.page_source
     driver.quit()
