@@ -17,7 +17,7 @@ var port = 5050;
 
 //스키마 생성
 var list;
-var product_list = require('./models/product_list_test');
+var product_list = require('./models/product_list');
 var timestamp2= new Date().getTime();
 product_list.find( {} , { "_id":false, "prd_Name": true, "prd_Brand": true } , function(err, list){
   var productname_list=[];
@@ -34,9 +34,11 @@ product_list.find( {} , { "_id":false, "prd_Name": true, "prd_Brand": true } , f
     return a ;
   }, []) ; // <-- 초기값 빈 배열 세팅!
   console.log('Check time with product_list_test ', new Date().getTime() - timestamp2, 'ms');
+  var auth_router = require('./routes/auth_router')(app);
   var python_router = require('./routes/python_router')(app);
   var product_router = require('./routes/product_router')(app,list);
 })
+
 
 
 // // [CONFIGURE ROUTER] - 스키마 전달

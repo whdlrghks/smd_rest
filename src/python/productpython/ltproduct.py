@@ -20,7 +20,18 @@ def remove_html_tags(data):
 
 
 def lotte_2(url):   # url = 상품 페이지 url
-    driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver')
+# <<<<<<< HEAD
+#     driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver')
+# =======
+    options = webdriver.ChromeOptions()
+    options.add_argument('headless')
+    options.add_argument('window-size=1920x1080')
+    options.add_argument("--disable-gpu")
+    # 혹은 options.add_argument("--disable-gpu")
+
+    driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver', chrome_options=options)
+    # driver = webdriver.Chrome('/Users/ikhwan/capstone/chromedriver')
+# >>>>>>> d52e0ffd2ce47e1e55cdbc6dec1beba44997717e
     lt_product = url
     driver.get(lt_product)
     timeout = 7
@@ -39,7 +50,7 @@ def lotte_2(url):   # url = 상품 페이지 url
                 cnt = soup.find("ul",{"id":"svmnBrndPrd"})
                 cnt_tmp = str(cnt.get('style'))
                 if 'display:none;' in cnt_tmp:
-                    pct_tmp = remove_html_tags(str(soup.find("p",{"id":"svmnGen"}))).split("최대 ")
+                    pct_tmp = remove_html_tags(str(soup.find("ul",{"id":"svmnGen"}))).split("최대 ")
                     pct_tmp2 = pct_tmp[1].split("%")
                     lt_percent = int(pct_tmp2[0])
                 else:
@@ -57,7 +68,7 @@ def lotte_2(url):   # url = 상품 페이지 url
                 cnt = soup.find("ul",{"id":"svmnBrndPrd"})
                 cnt_tmp = str(cnt.get('style'))
                 if 'display:none;' in cnt_tmp:
-                    pct_tmp = remove_html_tags(str(soup.find("p",{"id":"svmnGen"}))).split("최대 ")
+                    pct_tmp = remove_html_tags(str(soup.find("ul",{"id":"svmnGen"}))).split("최대 ")
                     pct_tmp2 = pct_tmp[1].split("%")
                     lt_percent = int(pct_tmp2[0])
                 else:
@@ -67,7 +78,7 @@ def lotte_2(url):   # url = 상품 페이지 url
             lt_price = soup.find("meta",{"property" : "rb:originalPrice"})
             lt_product_normal_price = lt_price.get('content')
             lt_product_sale_price = '로그인 필요'
-            
+
         if '일시품절 상품 입니다' in html:   #일시품점일 경우 neg, 재고가 남아 있을 경우 pos
             lt_product_ps = 'neg'
         else:

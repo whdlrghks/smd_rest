@@ -17,7 +17,7 @@ var product_list = require('../models/product_list_test');
 const fs = require('fs');
 
 product_list.count({
-  prd_3th: '스킨/토너'
+
 }, function(err,count){
   console.log(count);
 })

@@ -8,8 +8,20 @@ def remove_html_tags(data):
     p = re.compile(r'<.*?>')
     return p.sub('\n', data)
 
-dir_path = os.path.dirname(os.path.realpath(os.getcwd()))
-driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver')
+# <<<<<<< HEAD
+# dir_path = os.path.dirname(os.path.realpath(os.getcwd()))
+# driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver')
+# =======
+# dir_path = os.path.dirname(os.path.realpath(os.getcwd()))
+# driver = webdriver.Chrome('/Users/ikhwan/capstone/chromedriver')
+options = webdriver.ChromeOptions()
+options.add_argument('headless')
+options.add_argument('window-size=1920x1080')
+options.add_argument("--disable-gpu")
+# 혹은 options.add_argument("--disable-gpu")
+
+driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver', chrome_options=options)
+# >>>>>>> d52e0ffd2ce47e1e55cdbc6dec1beba44997717e
 driver.get('https://www.ssgdfm.com/shop/main')
 driver.implicitly_wait(3)
 driver.find_element_by_xpath('//*[@id="ssgdf-header"]/div[2]/div/div[2]/ul/li[1]/a').click()

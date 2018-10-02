@@ -60,5 +60,11 @@ typings/
 # next.js build output
 .next
 
+<<<<<<< HEAD
 *.bson
 *.json
+=======
+test
+
+#SMD-api-server
+>>>>>>> d52e0ffd2ce47e1e55cdbc6dec1beba44997717e

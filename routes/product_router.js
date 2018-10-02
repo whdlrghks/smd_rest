@@ -1,6 +1,9 @@
 var async = require('async'), mime = require('mime');
-var product_list = require('../models/product_list_test');
+var product_list = require('../models/product_list');
 var PythonShell = require('python-shell');
+var user_resevered = require('../models/user_resevered');
+var review = require('../models/review_product');
+var newcart = require('../models/user_cart');
 
 module.exports = function(app, list) {
 
@@ -55,6 +58,7 @@ module.exports = function(app, list) {
             result[0] = Math.ceil(count / limit);
             result[1] = product;
             result[2] = startPage;
+            result[3] = count;
             res.json(result);
           })
         })
@@ -68,6 +72,7 @@ module.exports = function(app, list) {
             result[0] = Math.ceil(count / limit);
             result[1] = product;
             result[2] = startPage;
+            result[3] = count;
             res.json(result);
           })
         })
@@ -77,14 +82,30 @@ module.exports = function(app, list) {
   app.post('/api/product', function(req, res) {
     console.log("API PRODUCT BY " + req.body.product_id);
     var _id = req.body.product_id;
+    var user_id = req.body.user_id;
+    console.log(user_id);
     var result = [];
     product_list.find({
         _id: _id
       })
       .exec(function(err, product) {
-        result[0] = product;
-        console.log(product);
-        res.json(result);
+        if(user_id==undefined&&user_id==''){
+
+          result[0] = product;
+
+          res.json(result);
+        }
+        else{
+          user_resevered.find({user_id : user_id})
+          .exec(function(err, reserved){
+
+            result[0]= product;
+            result[1]= reserved;
+            res.json(result);
+
+          })
+        }
+
       })
   })
   app.post('/api/product/SL', function(req, res) {
@@ -163,7 +184,7 @@ module.exports = function(app, list) {
                 }
             }
             console.log("[SL DICOUNT RESULT percent_prd = ",percent_prd,"discount_price = ",discount_price.toFixed(2),"]");
-            result = result+"/"+discount_price.toFixed(2);
+            result = result+"/"+percent_prd+"/"+discount_price.toFixed(2);
             res.json(result);
             // PythonShell.run('./src/python/productpython/cal_reserve.py', options_sl_cal, function(err, discount_price) {
             //   //result = 가격 / 재고
@@ -419,16 +440,20 @@ module.exports = function(app, list) {
     var limit = req.body.limitPage;
     var prd_Name={$regex:req.body.searchbox, $options: 'i' };
     var prd_Brand={$regex:req.body.searchbox,  $options: 'i' };
+    var prd_REF={$regex:req.body.searchbox,  $options: 'i' };
     //대소문자 구분 No =  '$options': 'i'
     if(req.body.category=="전체"){
 
-      var findoption = {$or:[ {prd_Name: prd_Name }, {prd_Brand:prd_Brand} ]};
+      var findoption = {$or:[ {prd_Name: prd_Name }, {prd_Brand:prd_Brand}, {prd_REF:prd_REF} ]};
     }
     else if(req.body.category=="브랜드"){
       var findoption = {prd_Brand:prd_Brand};
     }
     else if(req.body.category=="상품 이름"){
       var findoption = {prd_Name:prd_Name};
+    }
+    else if(req.body.category=="상품 코드"){
+      var findoption = {prd_REF:prd_REF};
     }
     else{
       console.log("NO RESULT ABOUT CATEGORIES");
@@ -442,6 +467,7 @@ module.exports = function(app, list) {
         findoption
       )
         .limit(limit)
+        .sort({ 'createdAt': -1 })
         .exec(function(err, product) {
           if(err){
             console.log(err);
@@ -458,6 +484,7 @@ module.exports = function(app, list) {
       product_list.find(findoption)
         .limit(limit)
         .skip(startPage)
+        .sort({ 'createdAt': -1 })
         .exec(function(err, product) {
           product_list.count(findoption, function(err, count) {
             var result = [];
@@ -468,5 +495,159 @@ module.exports = function(app, list) {
           })
         })
     }
+  })
+
+  app.post('/api/product/review/enroll', function(req, res) {
+    // input : prd_id, user_id, content, username, rating(integer)
+    // output :
+    // review number
+    // review list
+    // review page
+    // review content
+    console.log("REVIEW ENROLL INFORMAION ");
+    console.log(req.body);
+    var prd_id = req.body.prd_id;
+    var user_id = req.body.user_id;
+    var content = req.body.content;
+    var username = req.body.username;
+    var rating = req.body.rating;
+    var review_enroll= new review();
+    review_enroll.prd_id = prd_id,
+    review_enroll.user_id = user_id,
+    review_enroll.user_username = username,
+    review_enroll.rating = rating,
+    review_enroll.content = content,
+    review_enroll.createdAt = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+    review_enroll.updatedAt = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+    review_enroll.save(function(err) {
+      if (err) {
+        console.log(i + "'s error is" + err);
+      }
+      console.log("[FINISH ENROLL USER'S REVIEW ABOUT ",prd_id,"]");
+      res.json("success");
+    })
+  })
+
+
+  app.post('/api/product/review/list', function(req, res) {
+    // input : startpage, limit = 5 , prd_id
+    // output :
+    // review totalcount
+    // review present point
+    // review list
+    // review content
+    var prd_id = req.body.prd_id;
+    var startPage = req.body.startPage;
+
+    var limit = 3;
+    startPage = startPage * limit;
+    var findoption = { prd_id : prd_id};
+    //pagetoken 필요 - 한페이지 당 갯수 지정
+    if (startPage == 0) {
+      review.find(
+        findoption
+      )
+        .limit(limit)
+        .sort({ 'createdAt': -1 })
+        .exec(function(err, product) {
+          review.count(findoption, function(err, count) {
+            var result = {
+              totalcount : count,
+              present_point : startPage/limit,
+              list : product
+            };
+            res.json(result);
+          })
+        })
+    } else {
+      review.find(findoption)
+        .limit(limit)
+        .skip(startPage)
+        .sort({ 'createdAt': -1 })
+        .exec(function(err, product) {
+          review.count(findoption, function(err, count) {
+            var result = {
+              totalcount : count,
+              present_point : startPage/limit,
+              list : product
+            };
+            res.json(result);
+          })
+        })
+    }
+
+  })
+
+  app.post('/api/product/addCart', function(req,res){
+    let prd_id = req.body.prd_id;
+    let user_id = req.body.user_id;
+    let storage = req.body.storage;
+    let img_url = req.body.img_url;
+    let duty_category = req.body.duty_category;
+    let price = req.body.price;
+    let percent = req.body.percent;
+    let prd_url = req.body.prd_url;
+    let prd_name = req.body.prd_name;
+    let user_cart= new newcart();
+    user_cart.prd_id = prd_id,
+    user_cart.user_id = user_id,
+    user_cart.duty_category = duty_category,
+    user_cart.storage = storage,
+    user_cart.price = price,
+    user_cart.img_url = img_url,
+    user_cart.percent = percent,
+    user_cart.prd_url = prd_url,
+    user_cart.prd_name = prd_name,
+    user_cart.createdAt = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+    user_cart.updatedAt = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+    user_cart.save(function(err) {
+      if (err) {
+        console.log(i + "'s error is" + err);
+      }
+      console.log("[FINISH ADD USER'S CART ABOUT ",prd_id,"]");
+      res.json("success");
+    })
+  })
+  app.post('/api/product/getCartlist', function(req,res){
+    let user_id = req.body.user_id;
+    let findoption={
+      user_id : user_id
+    }
+    newcart.find(
+      findoption
+    )
+      .exec(function(err, product) {
+        user_resevered.find(findoption).exec( function(err, user_info) {
+          // console.log(user_info);
+          var LT_reserved=user_info[0].LT_reserved;
+          var SL_reserved=user_info[0].SL_reserved;
+          var SSG_reserved=user_info[0].SSG_reserved;
+          var result = {
+            product_list : product,
+            LT_reserved:LT_reserved,
+            SL_reserved:SL_reserved,
+            SSG_reserved:SSG_reserved
+          };
+          console.log("[FINISH GET USER'S CART LIST ABOUT ",user_id,"]");
+          res.json(result);
+        });
+
+
+      })
+
+  })
+
+  app.post('/api/product/deleteCart', function(req,res){
+    let _id = req.body._id;
+    let findoption={
+      _id : _id
+    }
+    newcart.remove(
+      findoption
+    )
+      .exec(function(err, product) {
+        res.json("success");
+      })
+
   })
 }

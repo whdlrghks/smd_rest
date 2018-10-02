@@ -12,7 +12,6 @@ var product_list = new Schema({
   prd_3rd: String,
   prd_Brand: String,
   prd_REF: String,
-  prd_Brandref: String,
   prd_SLURL: String,
   prd_SSGURL: String,
   prd_IMGURL: String,
