@@ -23,14 +23,14 @@ def remove_html_tags(data):
 #http://www.shilladfs.com/estore/kr/ko/?uiel=Desktop success
 #https://www.shilladfs.com/estore/kr/ko/login?error=true&popup=true&nextUrl=/estore/kr/ko fail
 def reserved(driver):
-    title3 = WebDriverWait(driver, 100) \
+    title3 = WebDriverWait(driver, 600) \
         .until(EC.presence_of_element_located((By.CSS_SELECTOR, "#ssgdf-header > div.headWrap > div > div.markList > ul > li:nth-child(2) > a")))
     driver.find_element_by_xpath('//*[@id="ssgdf-header"]/div[2]/div/div[2]/ul/li[2]/a').click()
-    title2 = WebDriverWait(driver, 100) \
+    title2 = WebDriverWait(driver, 600) \
         .until(EC.presence_of_element_located((By.CSS_SELECTOR, "#Form1 > div > div > div.memberInfobox > div.onlineInfoBox > div.myWalletBox")))
     driver.find_element_by_xpath('//*[@id="Form1"]/div/div/div[1]/div[1]/div[2]/ul/li[2]/a').click()
 
-    title = WebDriverWait(driver, 100) \
+    title = WebDriverWait(driver, 600) \
         .until(EC.presence_of_element_located((By.CSS_SELECTOR, "#Form1 > div.savemoney-box.reserve-fund > div > ul > li:nth-child(1) > p.dataTxt > span")))
     html = driver.page_source
     soup = BeautifulSoup(html,'html.parser')
@@ -62,7 +62,7 @@ def checkID():
 # >>>>>>> d52e0ffd2ce47e1e55cdbc6dec1beba44997717e
     driver.get('https://www.ssgdfm.com/shop/main')
     driver.switch_to_window(driver.window_handles[0])
-    title4 = WebDriverWait(driver, 100) \
+    title4 = WebDriverWait(driver, 600) \
         .until(EC.presence_of_element_located((By.CSS_SELECTOR, "#ssgdf-header > div.headWrap > div > div.markList > ul > li:nth-child(1) > a")))
     # //*[@id="ssgdf-header"]/div[2]/div/div[2]/ul/li[1]/a
     driver.find_element_by_xpath('//*[@id="ssgdf-header"]/div[2]/div/div[2]/ul/li[1]/a').click()
