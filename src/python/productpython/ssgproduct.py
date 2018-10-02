@@ -23,17 +23,17 @@ import sys
 
 def ssg_sele(url):
 # <<<<<<< HEAD
-#     driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver')
-# =======
-    options = webdriver.ChromeOptions()
-    options.add_argument('headless')
-    options.add_argument('window-size=1920x1080')
-    options.add_argument("--disable-gpu")
-    # 혹은 options.add_argument("--disable-gpu")
-
-    driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver', chrome_options=options)
-# >>>>>>> d52e0ffd2ce47e1e55cdbc6dec1beba44997717e
-    #driver = new HtmlUnitDriver();
+    driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver')
+# # =======
+#     options = webdriver.ChromeOptions()
+#     options.add_argument('headless')
+#     options.add_argument('window-size=1920x1080')
+#     options.add_argument("--disable-gpu")
+#     # 혹은 options.add_argument("--disable-gpu")
+#
+#     driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver', chrome_options=options)
+# # >>>>>>> d52e0ffd2ce47e1e55cdbc6dec1beba44997717e
+#     #driver = new HtmlUnitDriver();
 
     driver.get(url)
     # title = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.ID,"totalAmtDal")))

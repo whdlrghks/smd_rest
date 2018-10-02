@@ -37,14 +37,14 @@ def reserved(driver):
 # >>>>>>> d52e0ffd2ce47e1e55cdbc6dec1beba44997717e
 
 def checkShinlaID():
-    options = webdriver.ChromeOptions()
-    options.add_argument('headless')
-    options.add_argument('window-size=1920x1080')
-    options.add_argument("--disable-gpu")
+    # options = webdriver.ChromeOptions()
+    # options.add_argument('headless')
+    # options.add_argument('window-size=1920x1080')
+    # options.add_argument("--disable-gpu")
     # 혹은 options.add_argument("--disable-gpu")
 
-    driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver', chrome_options=options)
-    # driver = webdriver.Chrome('/Users/ikhwan/capstone/chromedriver')
+    # driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver', chrome_options=options)
+    driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver')
     driver.get('https://www.shilladfs.com/estore/kr/ko/login')
     driver.find_element_by_xpath('//*[@id="container"]/div[1]/div/div/div[2]/div/a').click()
     driver.implicitly_wait(3)
@@ -59,15 +59,21 @@ def checkShinlaID():
     driver.implicitly_wait(7)
 
     try:
+        driver.switch_to_window(window_after)
         result = driver.current_url
     except :
         driver.switch_to_window(window_before)
         result = driver.current_url
 
-
+    # print(result)
 
     # driver.quit()
     if result =='http://www.shilladfs.com/estore/kr/ko/?uiel=Desktop':
+
+        reserved(driver)
+        # print('shinla success')
+    elif result =='http://www.shilladfs.com/estore/kr/ko':
+
         reserved(driver)
         # print('shinla success')
 

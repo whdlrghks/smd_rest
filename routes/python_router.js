@@ -14,7 +14,7 @@ module.exports = function(app) {
          user_resevered.update({ user_id: user_id }, { $set: {updatedAt : nowTime , lotte_check : true,
            LT_reserved:result_list[1], LT_id:options.args[0], LT_pw:options.args[1]} }, function(err, output){
               if(err) console.log("error : "+err);
-              
+
               res.json(result_list[0]);
           });
        }

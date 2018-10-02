@@ -35,7 +35,7 @@ module.exports = function(app) {
     user_resevered.find({
       user_id: user_id
     }, function(err, user_info) {
-      // console.log(user_info);
+      console.log(user_info);
       var lt_check=user_info[0].lotte_check;
       var sl_check=user_info[0].shilla_check;
       var ssg_check=user_info[0].ssg_check;
@@ -158,6 +158,7 @@ module.exports = function(app) {
       console.log(user_info);
       async.parallel([
           function(callback){
+            if(user_info[0].LT_id!=null||user_info[0].LT_id!=undefined){
             var options_lt =  {
                mode: 'text',
               pythonOptions: ['-u'],
@@ -174,12 +175,17 @@ module.exports = function(app) {
               else{
                  var result_list = results[0].split("/");
 
-                callback(null,result_list[1]);
+                callback(null,"LT/"+result_list[1]);
               }
 
             });
+          }
+          else{
+            callback(null,"LT/0");
+          }
           },
           function(callback){
+              if(user_info[0].SL_id!=null||user_info[0].SL_id!=undefined){
             var options_sl =  {
                mode: 'text',
               pythonOptions: ['-u'],
@@ -187,19 +193,25 @@ module.exports = function(app) {
               args: [user_info[0].SL_id,user_info[0].SL_pw]
              }
             PythonShell.run('./src/python/authDutyfree/checkShinlaID.py', options_sl, function (err, results) {
-              // console.log("SL",results);
+
               if(err){
                 callback("sl_error",null);
               }
               else{
                 var result_list = results[0].split("/");
 
-               callback(null,result_list[1]);
+               callback(null,"SL/"+result_list[1]);
               }
             });
+            }
+            else{
+              callback(null,"SL/0");
+            }
           }
           ,
           function(callback){
+            if(user_info[0].SSG_id!=null||user_info[0].SSG_id!=undefined){
+
             var options_ssg =  {
                mode: 'text',
               pythonOptions: ['-u'],
@@ -214,24 +226,69 @@ module.exports = function(app) {
               else{
                 var result_list = results[0].split("/");
 
-               callback(null,result_list[1]);
+               callback(null,"SSG/"+result_list[1]);
               }
             });
+            }
+            else{
+              callback(null,"SSG/0");
+            }
           }
         ],
         function(err, results_all) {
           // console.log("IN 최종부분");
           if(err){
-            // console.log(err);
+            console.log(err);
             res.json([0,0,0]);
           }
           else{
+            var list_1=results_all[0].split("/");
+            var list_2=results_all[1].split("/");
+            var list_3=results_all[2].split("/");
+            let LT_reserved;
+            let SL_reserved;
+            let SSG_reserved;
+            if(list_1[0]=="LT"){
+              LT_reserved=list_1[1];
+            }
+            else if(list_1[0]=="SL"){
+              SL_reserved=list_1[1];
+            }
+            else if(list_1[0]=="SSG"){
+              SSG_reserved=list_1[1];
+            }
+            if(list_2[0]=="LT"){
+              LT_reserved=list_2[1];
+            }
+            else if(list_2[0]=="SL"){
+              SL_reserved=list_2[1];
+            }
+            else if(list_2[0]=="SSG"){
+              SSG_reserved=list_2[1];
+            }
+            if(list_3[0]=="LT"){
+              LT_reserved=list_3[1];
+            }
+            else if(list_3[0]=="SL"){
+              SL_reserved=list_3[1];
+            }
+            else if(list_3[0]=="SSG"){
+              SSG_reserved=list_3[1];
+            }
+
             var nowTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
             user_resevered.update({ user_id: user_id }, { $set: {updatedAt : nowTime ,
-              LT_reserved:results_all[0], SL_reserved:results_all[1], SSG_reserved:results_all[2] } }, function(err, output){
+              LT_reserved:LT_reserved, SL_reserved:SL_reserved, SSG_reserved:SSG_reserved } }, function(err, output){
+
+                var results_all_json ={
+                  LT_reserved:LT_reserved,
+                  SL_reserved:SL_reserved,
+                  SSG_reserved:SSG_reserved
+                };
+
                  if(err) console.log("error : "+err);
-                 // console.log(results_all);
-                 res.json(results_all);
+                 console.log(results_all_json);
+                 res.json(results_all_json);
                  // console.log(output);
              });
           }

@@ -100,7 +100,7 @@ def checkLotteID():
     options.add_argument("--disable-gpu")
     # 혹은 options.add_argument("--disable-gpu")
 
-    driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver')
+    driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver', chrome_options=options)
 # >>>>>>> d52e0ffd2ce47e1e55cdbc6dec1beba44997717e
 
     driver.get("https://kor.lps.lottedfs.com/kr/mypage/svmnHstrList")

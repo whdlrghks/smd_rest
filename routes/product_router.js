@@ -415,6 +415,7 @@ module.exports = function(app, list) {
 
   app.get('/api/autocomplete',function(req,res){
     console.log("API AUTOCOMPLETE LIST ");
+
     //나중에 한글 브랜드 추가되면 검색에 추가
     // product_list.find( { } , { "_id":false, "prd_Name": true, "prd_Brand": true } , function(err, list){
     //   var productname_list=[];
@@ -477,6 +478,7 @@ module.exports = function(app, list) {
             result[0] = Math.ceil(count / limit);
             result[1] = product;
             result[2] = startPage;
+            result[3] = count;
             res.json(result);
           })
         })
@@ -589,6 +591,7 @@ module.exports = function(app, list) {
     let prd_url = req.body.prd_url;
     let prd_name = req.body.prd_name;
     let user_cart= new newcart();
+    console.log(req.body);
     user_cart.prd_id = prd_id,
     user_cart.user_id = user_id,
     user_cart.duty_category = duty_category,
@@ -628,6 +631,7 @@ module.exports = function(app, list) {
             SL_reserved:SL_reserved,
             SSG_reserved:SSG_reserved
           };
+          console.log(result);
           console.log("[FINISH GET USER'S CART LIST ABOUT ",user_id,"]");
           res.json(result);
         });
