@@ -155,7 +155,7 @@ module.exports = function(app) {
     user_resevered.find({
       user_id: user_id
     }, function(err, user_info) {
-
+      console.log(user_info);
       async.parallel([
           function(callback){
             var options_lt =  {
@@ -164,12 +164,16 @@ module.exports = function(app) {
               scriptPath: '',
               args: [user_info[0].LT_id,user_info[0].LT_pw]
              }
-            PythonShell.run('./src/python/reserveDutyfree/getLotte.py', options_lt, function (err, results) {
+
+            PythonShell.run('./src/python/authDutyfree/checkLotteID.py', options_lt, function (err, results) {
+              // console.log("LT",results);
               if(err){
-                callback("error",null);
+
+                callback("lt_error",null);
               }
               else{
                  var result_list = results[0].split("/");
+
                 callback(null,result_list[1]);
               }
 
@@ -182,9 +186,10 @@ module.exports = function(app) {
               scriptPath: '',
               args: [user_info[0].SL_id,user_info[0].SL_pw]
              }
-            PythonShell.run('./src/python/reserveDutyfree/getShinla.py', options_sl, function (err, results) {
+            PythonShell.run('./src/python/authDutyfree/checkShinlaID.py', options_sl, function (err, results) {
+              // console.log("SL",results);
               if(err){
-                callback("error",null);
+                callback("sl_error",null);
               }
               else{
                 var result_list = results[0].split("/");
@@ -201,9 +206,10 @@ module.exports = function(app) {
               scriptPath: '',
               args: [user_info[0].SSG_id,user_info[0].SSG_pw]
              }
-            PythonShell.run('./src/python/reserveDutyfree/getSSG.py', options_ssg, function (err, results) {
+            PythonShell.run('./src/python/authDutyfree/checkShinsaegaeID.py', options_ssg, function (err, results) {
+              // console.log("SSG",results);
               if(err){
-                callback("error",null);
+                callback("ssg_error",null);
               }
               else{
                 var result_list = results[0].split("/");
@@ -214,12 +220,22 @@ module.exports = function(app) {
           }
         ],
         function(err, results_all) {
-          user_resevered.update({ user_id: user_id }, { $set: {updatedAt : nowTime ,
-            LT_reserved:results_all[0], SL_reserved:results_all[1], SSG_reserved:results_all[2] } }, function(err, output){
-               if(err) console.log("error : "+err);
-               res.json(results_all);
-               // console.log(output);
-           });
+          // console.log("IN 최종부분");
+          if(err){
+            // console.log(err);
+            res.json([0,0,0]);
+          }
+          else{
+            var nowTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+            user_resevered.update({ user_id: user_id }, { $set: {updatedAt : nowTime ,
+              LT_reserved:results_all[0], SL_reserved:results_all[1], SSG_reserved:results_all[2] } }, function(err, output){
+                 if(err) console.log("error : "+err);
+                 // console.log(results_all);
+                 res.json(results_all);
+                 // console.log(output);
+             });
+          }
+
         });
     })
   })

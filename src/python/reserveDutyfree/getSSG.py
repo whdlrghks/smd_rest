@@ -18,22 +18,43 @@ options.add_argument("--disable-gpu")
 
 driver = webdriver.Chrome('/Users/ikhwan/capstone/chromedriver', chrome_options=options)
 driver.get('https://www.ssgdfm.com/shop/main')
-driver.implicitly_wait(3)
+# driver.implicitly_wait(3)
+# driver.find_element_by_xpath('//*[@id="ssgdf-header"]/div[2]/div/div[2]/ul/li[1]/a').click()
+# driver.implicitly_wait(6)
+# window_before = driver.window_handles[0]
+# window_after = driver.window_handles[1]
+#
+# driver.switch_to_window(window_after)
+# driver.find_element_by_name('userId').send_keys(sys.argv[1])
+# driver.find_element_by_name('password').send_keys(sys.argv[2])
+# driver.find_element_by_xpath('//*[@id="loginForm"]/div/div[2]/input').click()
+# driver.implicitly_wait(1)
+# try:
+#     result = driver.current_url
+# except :
+#     driver.switch_to_window(driver.window_handles[0])
+#     result =  driver.current_url
+driver.switch_to_window(driver.window_handles[0])
+title4 = WebDriverWait(driver, 600) \
+    .until(EC.presence_of_element_located((By.CSS_SELECTOR, "#ssgdf-header > div.headWrap > div > div.markList > ul > li:nth-child(1) > a")))
+# //*[@id="ssgdf-header"]/div[2]/div/div[2]/ul/li[1]/a
 driver.find_element_by_xpath('//*[@id="ssgdf-header"]/div[2]/div/div[2]/ul/li[1]/a').click()
-driver.implicitly_wait(6)
+# driver.implicitly_wait(5)
 window_before = driver.window_handles[0]
 window_after = driver.window_handles[1]
-
+driver.implicitly_wait(10)
 driver.switch_to_window(window_after)
 driver.find_element_by_name('userId').send_keys(sys.argv[1])
 driver.find_element_by_name('password').send_keys(sys.argv[2])
 driver.find_element_by_xpath('//*[@id="loginForm"]/div/div[2]/input').click()
-driver.implicitly_wait(1)
+driver.implicitly_wait(3)
 try:
+    driver.switch_to_window(window_after)
     result = driver.current_url
 except :
-    driver.switch_to_window(driver.window_handles[0])
-    result =  driver.current_url
+    driver.switch_to_window(window_before)
+    result = driver.current_url
+
 driver.switch_to_window(driver.window_handles[0])
 driver.find_element_by_xpath('//*[@id="ssgdf-header"]/div[2]/div/div[2]/ul/li[2]/a').click()
 driver.implicitly_wait(1)
@@ -50,6 +71,6 @@ price1 = remove_html_tags(str(req1))
 price1 = "".join(price1.split());
 price1 = price1.replace("원","");
 price1 = price1.replace(",","")
-reserved_1 = int(price1) / 1100
+reserved_1 = int(price1) / 1110.2
 reserved_final = str(round(reserved_1,2))
 print(reserved_final)

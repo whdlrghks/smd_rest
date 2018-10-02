@@ -42,6 +42,6 @@ reserved = str(soup.find("dl",{"class":"save"}).find("dd").find("span").find("em
 price = remove_html_tags(reserved)
 price = "".join(price.split());
 price = price.replace(",","")
-reserved_1 = int(price)/1100
+reserved_1 = int(price)/1110.2
 reserved_final = str(round(reserved_1,2))
 print(reserved_final)
