@@ -59,93 +59,93 @@ module.exports = function(app) {
 
       // console.log(user_info);
       res.json("Start check");
-      // async.parallel([
-      //     function(callback){
-      //       var options_lt =  {
-      //          mode: 'text',
-      //         pythonOptions: ['-u'],
-      //         scriptPath: '',
-      //         args: [user_info[0].LT_id,user_info[0].LT_pw]
-      //        }
-      //        if(user_info[0].LT_id!=null){
-      //          PythonShell.run('./src/python/authDutyfree/checkLotteID.py', options_lt, function (err, results) {
-      //
-      //            if(err){
-      //              console.log("[ERROR CHECK LOTTE]",err);
-      //              callback("error",null);
-      //            }
-      //            else{
-      //              var result_list = results[0].split("/");
-      //
-      //             callback(null,result_list[1]);
-      //            }
-      //
-      //          });
-      //        }
-      //        else{
-      //          callback(null,null);
-      //        }
-      //     },
-      //     function(callback){
-      //       var options_sl =  {
-      //          mode: 'text',
-      //         pythonOptions: ['-u'],
-      //         scriptPath: '',
-      //         args: [user_info[0].SL_id,user_info[0].SL_pw]
-      //        }
-      //        if(user_info[0].SL_id!=null){
-      //          PythonShell.run('./src/python/authDutyfree/checkShinlaID.py', options_sl, function (err, results) {
-      //            if(err){
-      //              console.log("[ERROR CHECK SL]",err);
-      //              callback("error",null);
-      //            }
-      //            else{
-      //              var result_list = results[0].split("/");
-      //
-      //             callback(null,result_list[1]);
-      //            }
-      //          });
-      //        }
-      //
-      //       else{
-      //         callback(null,null);
-      //       }
-      //     }
-      //     ,
-      //     function(callback){
-      //       var options_ssg =  {
-      //          mode: 'text',
-      //         pythonOptions: ['-u'],
-      //         scriptPath: '',
-      //         args: [user_info[0].SSG_id,user_info[0].SSG_pw]
-      //        }
-      //        if(user_info[0].SSG_id!=null){
-      //          PythonShell.run('./src/python/authDutyfree/checkShinsaegaeID.py', options_ssg, function (err, results) {
-      //            if(err){
-      //              console.log("[ERROR CHECK SSG]",err);
-      //              callback("error",null);
-      //            }
-      //            else{
-      //              var result_list = results[0].split("/");
-      //
-      //             callback(null,result_list[1]);
-      //            }
-      //          });
-      //        }
-      //        else{
-      //          callback(null,null);
-      //        }
-      //     }
-      //   ],
-      //   function(err, results_all) {
-      //     var nowTime =  new Date().getTime();
-      //     console.log(results_all);
-      //     user_resevered.update({ user_id: user_id }, { $set: {updatedAt : nowTime ,
-      //       LT_reserved:results_all[0], SL_reserved:results_all[1], SSG_reserved:results_all[2] } }, function(err, output){
-      //          if(err) console.log("error : "+err);
-      //          console.log(output);
-      //      });
-      //   });
+      async.parallel([
+          function(callback){
+            var options_lt =  {
+               mode: 'text',
+              pythonOptions: ['-u'],
+              scriptPath: '',
+              args: [user_info[0].LT_id,user_info[0].LT_pw]
+             }
+             if(user_info[0].LT_id!=null){
+               PythonShell.run('./src/python/authDutyfree/checkLotteID.py', options_lt, function (err, results) {
+
+                 if(err){
+                   console.log("[ERROR CHECK LOTTE]",err);
+                   callback("error",null);
+                 }
+                 else{
+                   var result_list = results[0].split("/");
+
+                  callback(null,result_list[1]);
+                 }
+
+               });
+             }
+             else{
+               callback(null,null);
+             }
+          },
+          function(callback){
+            var options_sl =  {
+               mode: 'text',
+              pythonOptions: ['-u'],
+              scriptPath: '',
+              args: [user_info[0].SL_id,user_info[0].SL_pw]
+             }
+             if(user_info[0].SL_id!=null){
+               PythonShell.run('./src/python/authDutyfree/checkShinlaID.py', options_sl, function (err, results) {
+                 if(err){
+                   console.log("[ERROR CHECK SL]",err);
+                   callback("error",null);
+                 }
+                 else{
+                   var result_list = results[0].split("/");
+
+                  callback(null,result_list[1]);
+                 }
+               });
+             }
+
+            else{
+              callback(null,null);
+            }
+          }
+          ,
+          function(callback){
+            var options_ssg =  {
+               mode: 'text',
+              pythonOptions: ['-u'],
+              scriptPath: '',
+              args: [user_info[0].SSG_id,user_info[0].SSG_pw]
+             }
+             if(user_info[0].SSG_id!=null){
+               PythonShell.run('./src/python/authDutyfree/checkShinsaegaeID.py', options_ssg, function (err, results) {
+                 if(err){
+                   console.log("[ERROR CHECK SSG]",err);
+                   callback("error",null);
+                 }
+                 else{
+                   var result_list = results[0].split("/");
+
+                  callback(null,result_list[1]);
+                 }
+               });
+             }
+             else{
+               callback(null,null);
+             }
+          }
+        ],
+        function(err, results_all) {
+          var nowTime =  new Date().getTime();
+          console.log(results_all);
+          user_resevered.update({ user_id: user_id }, { $set: {updatedAt : nowTime ,
+            LT_reserved:results_all[0], SL_reserved:results_all[1], SSG_reserved:results_all[2] } }, function(err, output){
+               if(err) console.log("error : "+err);
+               console.log(output);
+           });
+        });
     })
   })
 
