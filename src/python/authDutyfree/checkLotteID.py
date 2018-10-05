@@ -88,10 +88,9 @@ def checkLotteID():
 #https://kor.lps.lottedfs.com/kr/member/ssoSuccess
 #http://lpsso.lottedfs.com/app/login/LSLA100300.do
 #https://kor.lps.lottedfs.com/kr/member/!pologin
-# <<<<<<< HEAD
+
 #     dir_path = os.path.dirname(os.path.realpath(os.getcwd()))
-#
-# =======
+
     # dir_path = os.path.dirname(os.path.realpath(os.getcwd()))
     # driver = webdriver.Chrome('/Users/ikhwan/capstone/chromedriver')
     options = webdriver.ChromeOptions()
@@ -100,8 +99,8 @@ def checkLotteID():
     options.add_argument("--disable-gpu")
     # 혹은 options.add_argument("--disable-gpu")
 
-    driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver', chrome_options=options)
-# >>>>>>> d52e0ffd2ce47e1e55cdbc6dec1beba44997717e
+    driver = webdriver.Chrome('/Users/ikhwan/capstone/chromedriver', chrome_options=options)
+
 
     driver.get("https://kor.lps.lottedfs.com/kr/mypage/svmnHstrList")
     driver.find_element_by_name('loginLpId').send_keys(sys.argv[1])

@@ -23,7 +23,7 @@ import sys
 
 def ssg_sele(url):
 # <<<<<<< HEAD
-    driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver')
+    driver = webdriver.Chrome('/Users/ikhwan/capstone/chromedriver')
 # # =======
 #     options = webdriver.ChromeOptions()
 #     options.add_argument('headless')
@@ -31,7 +31,7 @@ def ssg_sele(url):
 #     options.add_argument("--disable-gpu")
 #     # 혹은 options.add_argument("--disable-gpu")
 #
-#     driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver', chrome_options=options)
+    # driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver', chrome_options=options)
 # # >>>>>>> d52e0ffd2ce47e1e55cdbc6dec1beba44997717e
 #     #driver = new HtmlUnitDriver();
 

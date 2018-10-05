@@ -47,10 +47,10 @@ def reserved(driver):
     print("ssg success/"+reserved_final)
 
 def checkID():
-# <<<<<<< HEAD
+
     dir_path = os.path.dirname(os.path.realpath(os.getcwd()))
-    driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver'))
-# =======
+    driver = webdriver.Chrome('/Users/ikhwan/capstone/chromedriver'))
+
 #     # options = webdriver.ChromeOptions()
 #     # options.add_argument('headless')
 #     # options.add_argument('window-size=1920x1080')
@@ -59,7 +59,7 @@ def checkID():
 #     #
 #     # driver = webdriver.Chrome('/Users/ikhwan/capstone/chromedriver', chrome_options=options)
 #     driver = webdriver.Chrome('/Users/ikhwan/capstone/chromedriver')
-# >>>>>>> d52e0ffd2ce47e1e55cdbc6dec1beba44997717e
+
     driver.get('https://www.ssgdfm.com/shop/main')
     driver.switch_to_window(driver.window_handles[0])
     title4 = WebDriverWait(driver, 600) \

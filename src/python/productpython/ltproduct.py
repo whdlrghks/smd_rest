@@ -20,18 +20,18 @@ def remove_html_tags(data):
 
 
 def lotte_2(url):   # url = 상품 페이지 url
-# <<<<<<< HEAD
+
 #     driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver')
-# =======
+
     options = webdriver.ChromeOptions()
     options.add_argument('headless')
     options.add_argument('window-size=1920x1080')
     options.add_argument("--disable-gpu")
     # 혹은 options.add_argument("--disable-gpu")
 
-    driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver', chrome_options=options)
+    driver = webdriver.Chrome('/Users/ikhwan/capstone/chromedriver', chrome_options=options)
     # driver = webdriver.Chrome('/Users/ikhwan/capstone/chromedriver')
-# >>>>>>> d52e0ffd2ce47e1e55cdbc6dec1beba44997717e
+
     lt_product = url
     driver.get(lt_product)
     timeout = 7

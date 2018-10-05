@@ -12,10 +12,7 @@ def remove_html_tags(data):
     return p.sub('\n', data)
 #http://www.shilladfs.com/estore/kr/ko/?uiel=Desktop success
 #https://www.shilladfs.com/estore/kr/ko/login?error=true&popup=true&nextUrl=/estore/kr/ko fail
-# <<<<<<< HEAD
-# dir_path = os.path.dirname(os.path.realpath(os.getcwd()))
-# driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver')
-# =======
+
 # dir_path = os.path.dirname(os.path.realpath(os.getcwd()))
 # driver = webdriver.Chrome('/Users/ikhwan/capstone/chromedriver')
 
@@ -34,7 +31,7 @@ def reserved(driver):
     reserved_1 = int(price)/1100
     reserved_final = str(round(reserved_1,2))
     print('shinla success/'+reserved_final)
-# >>>>>>> d52e0ffd2ce47e1e55cdbc6dec1beba44997717e
+
 
 def checkShinlaID():
     # options = webdriver.ChromeOptions()
@@ -43,8 +40,8 @@ def checkShinlaID():
     # options.add_argument("--disable-gpu")
     # 혹은 options.add_argument("--disable-gpu")
 
-    # driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver', chrome_options=options)
-    driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver')
+    # driver = webdriver.Chrome('/Users/ikhwan/capstone/chromedriver', chrome_options=options)
+    driver = webdriver.Chrome('/Users/ikhwan/capstone/chromedriver')
     driver.get('https://www.shilladfs.com/estore/kr/ko/login')
     driver.find_element_by_xpath('//*[@id="container"]/div[1]/div/div/div[2]/div/a').click()
     driver.implicitly_wait(3)

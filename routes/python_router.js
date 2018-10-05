@@ -5,10 +5,11 @@ module.exports = function(app) {
   app.post('/api/checklottemembership', function(req, res){
     var options = req.body.options;
     var user_id = req.body.user_id;
-    console.log("[GET API REQUEST ABOUT LOTTEMEMBERSHIP]");
+    console.log("[GET API REQUEST ABOUT LOTTEMEMBERSHIP", user_id,"]");
     PythonShell.run('./src/python/authDutyfree/checkLotteID.py', options, function (err, results) {
       if (err) throw err;
        var result_list = results[0].split("/");
+
        if(result_list[0]=='lotte success'){
          var nowTime =  new Date().getTime();
          user_resevered.update({ user_id: user_id }, { $set: {updatedAt : nowTime , lotte_check : true,
@@ -28,15 +29,16 @@ module.exports = function(app) {
     var options = req.body.options;
     var user_id = req.body.user_id;
 
-    console.log("[GET API REQUEST ABOUT SHINLAMEMBERSHIP]");
+    console.log("[GET API REQUEST ABOUT SHINLAMEMBERSHIP", user_id,"]");
     PythonShell.run('./src/python/authDutyfree/checkShinlaID.py', options, function (err, results) {
       if (err) throw err;
-
+      
        var result_list = results[0].split("/");
        if(result_list[0]=='shinla success'){
          var nowTime =  new Date().getTime();
          user_resevered.update({ user_id: user_id }, { $set: {updatedAt : nowTime , shilla_check : true,
            SL_reserved:result_list[1], SL_id:options.args[0], SL_pw:options.args[1]}}, function(err, output){
+
               if(err) console.log("error : "+err);
 
               res.json(result_list[0]);
@@ -51,7 +53,7 @@ module.exports = function(app) {
   app.post('/api/checkssgmembership', function(req, res){
     var options = req.body.options;
     var user_id = req.body.user_id;
-    console.log("[GET API REQUEST ABOUT SSGMEMBERSHIP]");
+    console.log("[GET API REQUEST ABOUT SSGMEMBERSHIP", user_id,"]");
     try{
       PythonShell.run('./src/python/authDutyfree/checkShinsaegaeID.py', options, function (err, results) {
         if (err) throw err;

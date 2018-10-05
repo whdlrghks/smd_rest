@@ -23,17 +23,17 @@ def remove_html_tags(data):
 def getPost(product_title):
 
     postList=""
-# <<<<<<< HEAD
+
 #     driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver')
-# =======
+
     options = webdriver.ChromeOptions()
     options.add_argument('headless')
     options.add_argument('window-size=1920x1080')
     options.add_argument("--disable-gpu")
     # 혹은 options.add_argument("--disable-gpu")
 
-    driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver', chrome_options=options)
-# >>>>>>> d52e0ffd2ce47e1e55cdbc6dec1beba44997717e
+    driver = webdriver.Chrome('/Users/ikhwan/capstone/chromedriver', chrome_options=options)
+
     for i in range (0,3):
         prd1 = 'https://search.naver.com/search.naver?sm=tab_hty.top&where=post&query='
         prd2 = product_title.replace(" ","+")

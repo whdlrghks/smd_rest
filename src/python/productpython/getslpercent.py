@@ -11,10 +11,10 @@ import sys
 def remove_html_tags(data):
     p = re.compile(r'<.*?>')
     return p.sub('\n', data)
+#
 
-<<<<<<< HEAD
-driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver')
-=======
+# driver = webdriver.Chrome('/home/cloudpool/Desktop/Capstone/chromedriver')
+
 options = webdriver.ChromeOptions()
 options.add_argument('headless')
 options.add_argument('window-size=1920x1080')
@@ -22,7 +22,7 @@ options.add_argument("--disable-gpu")
 # 혹은 options.add_argument("--disable-gpu")
 
 driver = webdriver.Chrome('/Users/ikhwan/capstone/chromedriver', chrome_options=options)
->>>>>>> d52e0ffd2ce47e1e55cdbc6dec1beba44997717e
+
 
 #신라
 def getPercent_shilla(url):    # 해당 상품의 신라면세점 적립금 적용 한계 퍼센트를 가져옴, sl_percent 값이 퍼센트값
