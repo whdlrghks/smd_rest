@@ -1,9 +1,9 @@
 var async = require('async'), mime = require('mime');
 var user_resevered = require('../models/user_resevered');
 var PythonShell = require('python-shell');
+var BoardContents = require('../models/boardSchema');
 module.exports = function(app) {
   app.post('/api/register_user', function(req, res){
-    console.log("ININININREGISTER");
     var user_id = req.body.user_id;
     var user_info = new user_resevered();
     user_info.user_id = user_id,
@@ -295,5 +295,76 @@ module.exports = function(app) {
 
         });
     })
+  })
+
+  app.post('/api/getboardlist', function(req,res){
+    console.log("[REQUEST GET BOARD LIST]");
+    var pageNum = 1;
+    var skipSize = req.body.skipSize;
+    var limitSize = req.body.limitSize;
+    BoardContents.count({deleted:false},function(err, totalCount){
+   // db에서 날짜 순으로 데이터들을 가져옴
+    if(err) throw err;
+    pageNum = Math.ceil(totalCount/limitSize);
+    BoardContents.find({deleted:false}).sort({date:-1}).skip(skipSize).limit(limitSize).exec(function(err, pageContents) {
+        if(err) throw err;
+        var result = {
+          content : pageContents,
+          pagination : pageNum
+        }
+        res.json(result);
+    });
+});
+
+ });
+  function addBoard(title, writer, content, password){
+
+    var newBoardContents = new BoardContents;
+
+    newBoardContents.writer = writer;
+    newBoardContents.title = title;
+    newBoardContents.contents = content;
+    newBoardContents.password = password;
+    newBoardContents.save(function (err) {
+        if (err) throw err;
+    });
+}
+  app.post('/api/enrollboardlist', function(req,res){
+    console.log("[REQUEST ENROLL BOARD LIST]");
+    var addNewTitle = req.body.addContentSubject;
+    var addNewWriter = req.body.addContentWriter;
+    var addNewContent = req.body.addContents;
+    var addNewPasword = req.body.addContentPassword;
+    addBoard(addNewTitle, addNewWriter, addNewContent, addNewPasword);
+    res.json("success");
+  });
+
+  app.post('/api/getboardcontent', function(req,res){
+    console.log("[REQUEST GET ",req.body.board_id,"'s BOARD CONTENT]");
+    var contentId = req.body.board_id;
+    BoardContents.findOne({_id:contentId}, function(err, rawContent){
+    if(err) throw err;
+    rawContent.count += 1; // 조회수를 늘려줍니다.
+    rawContent.save(function(err){ // 변화된 조횟수 저장
+        if(err) throw err;
+        res.json(rawContent);
+
+    });
+    })
+  })
+
+  app.post('/api/addboardcomment', function(req,res){
+    console.log("[REQUEST ADD ",req.body.board_id,"'s BOARD COMMENT]");
+    var contentId = req.body.board_id;
+    var writer  = req.body.writer;
+    var comment = req.body.comment;
+    BoardContents.findOne({_id: contentId}, function(err, rawContent){
+    if(err) throw err;
+    rawContent.comments.unshift({name:writer, memo: comment});
+    rawContent.save(function(err){
+        if(err) throw err;
+        res.json("success")
+    });
+});
   })
 }

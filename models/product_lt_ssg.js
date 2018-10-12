@@ -4,8 +4,8 @@ var Schema = mongoose.Schema;
 
 
 var product_lt_ssg = new Schema({
-  prd_id_lt : String,
-  prd_id_ssg: [String]
+  prd_id_lt : [String],
+  prd_info_other : [String]
 });
 
 
