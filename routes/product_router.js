@@ -170,7 +170,10 @@ module.exports = function(app, list) {
               args: [percent_prd,price,req.body.SL_reserved]
             }
             percent_prd=percent_prd*1;
-            price= price*1;
+            if(price.match(/,/)){
+              price = price.replace(",","");
+            }
+            price= Number(price);
             var reserve = req.body.SL_reserved*1;
             if(percent_prd == 0)
                 var discount_price = price;
@@ -258,7 +261,11 @@ module.exports = function(app, list) {
                 args: [percent_prd,price,req.body.LT_reserved]
               }
               percent_prd=percent_prd*1;
-              price= price*1;
+              if(price.match(/,/)){
+                price = price.replace(",","");
+              }
+              price= Number(price);
+
               var reserve = req.body.LT_reserved*1;
               if(percent_prd == 0)
                   var discount_price = price;
@@ -358,7 +365,10 @@ module.exports = function(app, list) {
               args: [percent_prd,price,req.body.SSG_reserved]
             }
             percent_prd=percent_prd*1;
-            price= price*1;
+            if(price.match(/,/)){
+              price = price.replace(",","");
+            }
+            price= Number(price);
             var reserve = req.body.SSG_reserved*1;
             if(percent_prd == 0)
                 var discount_price = price;

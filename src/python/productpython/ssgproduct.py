@@ -85,9 +85,12 @@ def ssg_sele(url):
                 else:
                     ssg_discount_price = ssg_price1
                 ssg_product_info = soup.find("table").find("tbody").find_all("td")
-                ssg_sell_price = ssg_product_info[2].text.split("(")[0].replace("$","").strip()
-                if ".00" in ssg_sell_price:
-                    ssg_sell_price = ssg_sell_price.replace(".00","")
+                try:
+                    ssg_sell_price = ssg_product_info[2].text.split("(")[0].replace("$","").strip()
+                    if ".00" in ssg_sell_price:
+                        ssg_sell_price = ssg_sell_price.replace(".00","")
+                except:
+                    ssg_sell_price="로그인 필요"
 
 
 

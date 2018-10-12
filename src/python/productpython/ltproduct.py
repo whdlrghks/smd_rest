@@ -29,12 +29,12 @@ def lotte_2(url):   # url = 상품 페이지 url
     options.add_argument("--disable-gpu")
     # 혹은 options.add_argument("--disable-gpu")
 
-    driver = webdriver.Chrome('/Users/ikhwan/capstone/chromedriver', chrome_options=options)
-    # driver = webdriver.Chrome('/Users/ikhwan/capstone/chromedriver')
+    # driver = webdriver.Chrome('/Users/ikhwan/capstone/chromedriver', chrome_options=options)
+    driver = webdriver.Chrome('/Users/ikhwan/capstone/chromedriver')
 
     lt_product = url
     driver.get(lt_product)
-    timeout = 7
+    timeout =600
     element_present = EC.presence_of_element_located((By.ID, 'prdPriceBenefit'))
     WebDriverWait(driver, timeout).until(element_present)
     html = driver.page_source
